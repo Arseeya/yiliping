@@ -13,51 +13,155 @@
     }
 
     body {
-      background: #f8f5f0;  /* 宣纸底色 */
+      background: #f2ede6;  /* 稍深一点的宣纸底 */
       background-image: 
-        radial-gradient(circle at 20% 30%, rgba(200, 180, 160, 0.03) 0%, transparent 25%),
-        radial-gradient(circle at 90% 70%, rgba(180, 160, 140, 0.03) 0%, transparent 30%);
+        radial-gradient(circle at 20% 30%, rgba(200, 180, 160, 0.04) 0%, transparent 25%),
+        radial-gradient(circle at 90% 70%, rgba(180, 160, 140, 0.04) 0%, transparent 30%);
       font-family: "Noto Serif SC", "Songti SC", "SimSun", "STSong", serif;
       color: #2e2a28;
       line-height: 1.7;
-      padding: 2rem 1.2rem;
+      padding: 3rem 1.2rem;
       display: flex;
       justify-content: center;
       min-height: 100vh;
     }
 
-    /* 主纸页 */
-    .paper {
+    /* ---------- 卷轴整体 ---------- */
+    .scroll {
       max-width: 860px;
       width: 100%;
-      background: #fffcf8;
-      border: 1px solid #e0d7cf;
-      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.02), 0 10px 30px -18px rgba(80, 60, 40, 0.15);
-      padding: 3rem 2.8rem;
+      position: relative;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* 卷轴木轴——上下各一，含轴头 */
+    .scroll-rod {
+      position: relative;
+      height: 26px;
+      display: flex;
+      align-items: center;
+      z-index: 3;
+    }
+
+    .scroll-rod .rod-bar {
+      flex: 1;
+      height: 14px;
+      background: linear-gradient(180deg, #a8815f 0%, #7c5a3e 35%, #5e412c 100%);
+      border-radius: 7px;
+      box-shadow: 0 2px 4px rgba(60, 40, 25, 0.25), inset 0 1px 1px rgba(255, 235, 210, 0.45);
+    }
+
+    .scroll-rod .rod-cap {
+      width: 26px;
+      height: 26px;
+      border-radius: 50%;
+      background: radial-gradient(circle at 35% 30%, #c9a67e, #8a6747 55%, #5a3f2b);
+      box-shadow: 0 2px 5px rgba(50, 30, 15, 0.35), inset 0 1px 2px rgba(255, 240, 220, 0.5);
+      flex-shrink: 0;
       position: relative;
     }
 
-    /* 细框装饰——中式册页感 */
+    .scroll-rod .rod-cap::after {
+      content: "";
+      position: absolute;
+      inset: 6px;
+      border-radius: 50%;
+      border: 1px solid rgba(255, 235, 210, 0.25);
+    }
+
+    .scroll-rod.top {
+      margin-bottom: -4px;
+    }
+
+    .scroll-rod.bottom {
+      margin-top: -4px;
+    }
+
+    /* ---------- 回纹边框纸页 ---------- */
+    .paper-wrap {
+      position: relative;
+      z-index: 2;
+      padding: 0 1px;
+    }
+
+    .paper {
+      background: #fffcf8;
+      border: 1px solid #d9cec2;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.03), 0 18px 40px -20px rgba(80, 60, 40, 0.25);
+      padding: 1.4rem;
+      position: relative;
+    }
+
+    /* 回纹边框——上下横边 */
     .paper::before {
       content: "";
       position: absolute;
-      top: 14px;
-      left: 14px;
-      right: 14px;
-      bottom: 14px;
-      border: 1px solid #eee8e2;
+      inset: 0;
       pointer-events: none;
-      border-radius: 1px;
+      background-image:
+        repeating-linear-gradient(90deg,
+          transparent 0, transparent 5px,
+          #d8cabb 5px, #d8cabb 6px,
+          transparent 6px, transparent 11px,
+          #d8cabb 11px, #d8cabb 12px,
+          transparent 12px, transparent 15px),
+        repeating-linear-gradient(90deg,
+          transparent 0, transparent 15px,
+          #d8cabb 15px, #d8cabb 16px);
+      background-size: 100% 4px, 100% 8px;
+      background-position: 0 0, 0 4px;
+      background-repeat: repeat-x;
+      top: 6px;
+      bottom: 6px;
+      opacity: 0.85;
+      -webkit-mask-image: linear-gradient(180deg,
+        #000 0, #000 10px, transparent 10px, transparent calc(100% - 10px), #000 calc(100% - 10px), #000 100%);
+      mask-image: linear-gradient(180deg,
+        #000 0, #000 10px, transparent 10px, transparent calc(100% - 10px), #000 calc(100% - 10px), #000 100%);
+    }
+
+    /* 回纹左右竖边 */
+    .paper::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      background-image:
+        repeating-linear-gradient(180deg,
+          transparent 0, transparent 5px,
+          #d8cabb 5px, #d8cabb 6px,
+          transparent 6px, transparent 11px,
+          #d8cabb 11px, #d8cabb 12px,
+          transparent 12px, transparent 15px),
+        repeating-linear-gradient(180deg,
+          transparent 0, transparent 15px,
+          #d8cabb 15px, #d8cabb 16px);
+      background-size: 4px 100%, 8px 100%;
+      background-position: 0 0, 4px 0;
+      background-repeat: repeat-y;
+      left: 6px;
+      right: 6px;
+      opacity: 0.85;
+      -webkit-mask-image: linear-gradient(90deg,
+        #000 0, #000 10px, transparent 10px, transparent calc(100% - 10px), #000 calc(100% - 10px), #000 100%);
+      mask-image: linear-gradient(90deg,
+        #000 0, #000 10px, transparent 10px, transparent calc(100% - 10px), #000 calc(100% - 10px), #000 100%);
+    }
+
+    /* 纸页内容区 */
+    .paper-inner {
+      position: relative;
+      z-index: 1;
+      padding: 2.4rem 2rem 2rem;
     }
 
     /* ---------- 模块分隔 ---------- */
     .module {
-      margin-bottom: 2.8rem;
+      margin-bottom: 2.6rem;
       position: relative;
-      z-index: 1;
     }
 
-    /* 模块小标题——竖排红印式 */
     .module-label {
       display: flex;
       align-items: center;
@@ -65,20 +169,19 @@
       margin-bottom: 1.3rem;
     }
 
-    .module-label .seal {
+    .module-label .seal-no {
       display: inline-flex;
       align-items: center;
       justify-content: center;
       width: 26px;
       height: 26px;
-      background: #c44d3a;      /* 朱砂 */
+      background: #c44d3a;
       color: #fff8f0;
       font-size: 0.7rem;
       font-weight: 600;
-      border-radius: 3px;
+      border-radius: 2px;
       letter-spacing: 1px;
-      font-family: "Noto Serif SC", "Songti SC", serif;
-      box-shadow: 0 1px 2px rgba(150, 50, 30, 0.15);
+      box-shadow: 0 1px 2px rgba(150, 50, 30, 0.2);
       user-select: none;
     }
 
@@ -110,19 +213,15 @@
       color: #c44d3a;
     }
 
-    /* 题记——叛逆那句 */
     .motto {
       font-size: 1rem;
       color: #8a7e72;
       margin-top: 0.5rem;
       letter-spacing: 0.12em;
-      font-style: normal;
       border-top: 1px solid #eee8e2;
       border-bottom: 1px solid #eee8e2;
       padding: 0.5rem 1.8rem;
       display: inline-block;
-      font-weight: 400;
-      position: relative;
     }
 
     .motto::before,
@@ -153,7 +252,6 @@
       background: #fdfaf6;
       letter-spacing: 0.03em;
       transition: all 0.15s ease;
-      font-family: "Noto Serif SC", "Songti SC", serif;
       white-space: nowrap;
     }
 
@@ -171,7 +269,6 @@
       font-size: 1.05rem;
       color: #3f3833;
       line-height: 1.8;
-      letter-spacing: 0.03em;
       font-style: italic;
     }
 
@@ -181,19 +278,15 @@
       gap: 0.6rem;
       font-size: 0.95rem;
       color: #4f4842;
-      letter-spacing: 0.02em;
       padding-left: 0.2rem;
     }
 
-    .intro-lines p {
-      margin: 0;
-    }
+    .intro-lines p { margin: 0; }
 
     .intro-lines .sub-note {
       font-size: 0.82rem;
       color: #a89e94;
       margin-top: 0.4rem;
-      letter-spacing: 0.05em;
     }
 
     /* ---------- 模块四 · 递帖 ---------- */
@@ -219,7 +312,6 @@
       flex-wrap: wrap;
       justify-content: center;
       gap: 1.2rem 2rem;
-      padding: 0.2rem 0;
     }
 
     .social-row a {
@@ -230,12 +322,71 @@
       border-bottom: 1px dotted #d9cec4;
       padding-bottom: 0.15rem;
       transition: color 0.15s, border-color 0.15s;
-      font-family: "Noto Serif SC", "Songti SC", serif;
     }
 
     .social-row a:hover {
       color: #b84b38;
       border-bottom-color: #b84b38;
+    }
+
+    /* ---------- 落款区（右下角） ---------- */
+    .signature {
+      display: flex;
+      justify-content: flex-end;
+      align-items: flex-end;
+      gap: 1.2rem;
+      margin-top: 1.2rem;
+      padding-right: 0.2rem;
+    }
+
+    .signature .sign-text {
+      text-align: right;
+      font-size: 0.78rem;
+      color: #8a7e72;
+      letter-spacing: 0.12em;
+      line-height: 1.9;
+      font-family: "Noto Serif SC", "Songti SC", serif;
+    }
+
+    .signature .sign-text .sign-name {
+      font-size: 0.88rem;
+      color: #5f554b;
+    }
+
+    /* 朱文印章——红底白字方章 */
+    .red-seal {
+      width: 56px;
+      height: 56px;
+      background: #c44d3a;
+      border-radius: 3px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff8f0;
+      font-size: 1.35rem;
+      font-weight: 700;
+      letter-spacing: 0.05em;
+      line-height: 1;
+      box-shadow: 0 2px 6px rgba(150, 50, 30, 0.25);
+      position: relative;
+      flex-shrink: 0;
+      user-select: none;
+      writing-mode: vertical-rl;
+      text-orientation: upright;
+    }
+
+    /* 印章做点斑驳质感 */
+    .red-seal::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      border-radius: 3px;
+      background-image: radial-gradient(circle at 30% 40%, rgba(255,255,255,0.12) 1px, transparent 1px),
+                        radial-gradient(circle at 70% 70%, rgba(120,30,15,0.15) 1px, transparent 1px),
+                        radial-gradient(circle at 55% 25%, rgba(255,255,255,0.1) 1px, transparent 1px);
+      background-size: 9px 9px, 13px 13px, 11px 11px;
+      opacity: 0.5;
+      pointer-events: none;
     }
 
     /* ---------- 页脚 ---------- */
@@ -246,8 +397,7 @@
       letter-spacing: 0.1em;
       border-top: 1px solid #f0eae4;
       padding-top: 1.2rem;
-      margin-top: 1rem;
-      font-family: "Noto Serif SC", "Songti SC", serif;
+      margin-top: 1.6rem;
     }
 
     .footer-note .red-dot {
@@ -257,29 +407,17 @@
 
     /* ---------- 响应式 ---------- */
     @media (max-width: 600px) {
-      body {
-        padding: 1rem 0.8rem;
-      }
+      body { padding: 1.5rem 0.6rem; }
 
-      .paper {
-        padding: 2.2rem 1.4rem;
-      }
+      .paper { padding: 1.1rem; }
 
-      .paper::before {
-        top: 10px;
-        left: 10px;
-        right: 10px;
-        bottom: 10px;
-      }
+      .paper-inner { padding: 1.6rem 1rem 1.4rem; }
 
-      .name {
-        font-size: 1.9rem;
-      }
+      .name { font-size: 1.9rem; }
 
       .motto {
         font-size: 0.85rem;
         padding: 0.4rem 1rem;
-        letter-spacing: 0.08em;
       }
 
       .quote-block {
@@ -287,94 +425,121 @@
         padding: 0.7rem 1rem 0.7rem 1.2rem;
       }
 
-      .social-row {
-        gap: 0.8rem 1.2rem;
-      }
-
-      .tag-cloud {
-        gap: 0.5rem 0.7rem;
-      }
-
       .tag-item {
         font-size: 0.75rem;
         padding: 0.2rem 0.7rem;
       }
+
+      .scroll-rod .rod-cap { width: 22px; height: 22px; }
+      .scroll-rod .rod-bar { height: 11px; }
+
+      .signature { gap: 0.8rem; }
+      .red-seal { width: 48px; height: 48px; font-size: 1.15rem; }
+      .signature .sign-text { font-size: 0.7rem; }
     }
   </style>
 </head>
 <body>
-  <main class="paper">
+  <div class="scroll">
 
-    <!-- ========== 模块一 · 题签 ========== -->
-    <section class="module">
-      <div class="module-label">
-        <span class="seal">一</span>
-        <span class="line"></span>
-      </div>
-
-      <div class="title-block">
-        <h1 class="name"><span class="surname">易</span>丽萍</h1>
-        <div class="motto">不入流，也是流。</div>
-      </div>
-    </section>
-
-    <!-- ========== 模块二 · 名帖 ========== -->
-    <section class="module">
-      <div class="module-label">
-        <span class="seal">二</span>
-        <span class="line"></span>
-      </div>
-
-      <div class="tag-cloud">
-        <span class="tag-item">江西</span>
-        <span class="tag-item">高三</span>
-        <span class="tag-item">十七岁</span>
-        <span class="tag-item">水瓶座</span>
-        <span class="tag-item">2月1日</span>
-        <span class="tag-item">INFP</span>
-        <span class="tag-item">喜欢独立思考，不喜欢随大流</span>
-        <span class="tag-item">中文 · 江西方言 · 一点点英语</span>
-      </div>
-    </section>
-
-    <!-- ========== 模块三 · 自述 ========== -->
-    <section class="module">
-      <div class="module-label">
-        <span class="seal">三</span>
-        <span class="line"></span>
-      </div>
-
-      <div class="quote-block">
-        我很难评价自己，所以评论权就交给所有认识我、和看到这个网站的人。
-      </div>
-
-      <div class="intro-lines">
-        <p>来自江西的高三学生，十七岁，水瓶座。</p>
-        <p>朋友不少，也还想认识更多——路过这里的话，欢迎打个招呼。</p>
-        <p class="sub-note">嗯，就这样吧。</p>
-      </div>
-    </section>
-
-    <!-- ========== 模块四 · 递帖 ========== -->
-    <section class="module">
-      <div class="module-label">
-        <span class="seal">四</span>
-        <span class="line"></span>
-      </div>
-
-      <div class="connect-block">
-        <p class="invite">如果你也想认识我，<em>写信给我</em>。</p>
-        <div class="social-row">
-          <a href="mailto:arseeya@outlook.com">arseeya@outlook.com</a>
-        </div>
-      </div>
-    </section>
-
-    <!-- ========== 页脚 ========== -->
-    <div class="footer-note">
-      易丽萍<span class="red-dot">·</span>yiliping.kdns.fr
+    <!-- 上卷轴 -->
+    <div class="scroll-rod top">
+      <div class="rod-cap"></div>
+      <div class="rod-bar"></div>
+      <div class="rod-cap"></div>
     </div>
 
-  </main>
+    <!-- 回纹纸页 -->
+    <div class="paper-wrap">
+      <div class="paper">
+        <div class="paper-inner">
+
+          <!-- ========== 模块一 · 题签 ========== -->
+          <section class="module">
+            <div class="module-label">
+              <span class="seal-no">一</span>
+              <span class="line"></span>
+            </div>
+            <div class="title-block">
+              <h1 class="name"><span class="surname">易</span>丽萍</h1>
+              <div class="motto">不入流，也是流。</div>
+            </div>
+          </section>
+
+          <!-- ========== 模块二 · 名帖 ========== -->
+          <section class="module">
+            <div class="module-label">
+              <span class="seal-no">二</span>
+              <span class="line"></span>
+            </div>
+            <div class="tag-cloud">
+              <span class="tag-item">江西</span>
+              <span class="tag-item">高三</span>
+              <span class="tag-item">十七岁</span>
+              <span class="tag-item">水瓶座</span>
+              <span class="tag-item">2月1日</span>
+              <span class="tag-item">INFP</span>
+              <span class="tag-item">喜欢独立思考，不喜欢随大流</span>
+              <span class="tag-item">中文 · 江西方言 · 一点点英语</span>
+            </div>
+          </section>
+
+          <!-- ========== 模块三 · 自述 ========== -->
+          <section class="module">
+            <div class="module-label">
+              <span class="seal-no">三</span>
+              <span class="line"></span>
+            </div>
+            <div class="quote-block">
+              我很难评价自己，所以评论权就交给所有认识我、和看到这个网站的人。
+            </div>
+            <div class="intro-lines">
+              <p>来自江西的高三学生，十七岁，水瓶座。</p>
+              <p>朋友不少，也还想认识更多——路过这里的话，欢迎打个招呼。</p>
+              <p class="sub-note">嗯，就这样吧。</p>
+            </div>
+          </section>
+
+          <!-- ========== 模块四 · 递帖 ========== -->
+          <section class="module">
+            <div class="module-label">
+              <span class="seal-no">四</span>
+              <span class="line"></span>
+            </div>
+            <div class="connect-block">
+              <p class="invite">如果你也想认识我，<em>写信给我</em>。</p>
+              <div class="social-row">
+                <a href="mailto:arseeya@outlook.com">arseeya@outlook.com</a>
+              </div>
+            </div>
+          </section>
+
+          <!-- ========== 落款 ========== -->
+          <div class="signature">
+            <div class="sign-text">
+              <div class="sign-name">易丽萍 谨识</div>
+              <div>丙午年九月廿一</div>
+            </div>
+            <!-- 朱文印章：红底白字「荼絳」 -->
+            <div class="red-seal" aria-label="荼絳">荼絳</div>
+          </div>
+
+          <!-- ========== 页脚 ========== -->
+          <div class="footer-note">
+            易丽萍<span class="red-dot">·</span>yiliping.kdns.fr
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <!-- 下卷轴 -->
+    <div class="scroll-rod bottom">
+      <div class="rod-cap"></div>
+      <div class="rod-bar"></div>
+      <div class="rod-cap"></div>
+    </div>
+
+  </div>
 </body>
 </html>
