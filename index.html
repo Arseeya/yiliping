@@ -112,13 +112,11 @@
       vertical-align: middle;
     }
 
-    /* 竖排诗词小字 */
+    /* 竖排诗词小字（连贯版） */
     .verse-note {
       position: absolute;
       right: -1rem;
       top: 0;
-      display: flex;
-      gap: 0.8rem;
       writing-mode: vertical-rl;
       text-orientation: upright;
       font-size: 0.75rem;
@@ -271,7 +269,6 @@
         margin-top: 1.5rem;
         font-size: 0.7rem;
         color: #b5a99e;
-        justify-content: flex-end;
       }
     }
 
@@ -300,10 +297,9 @@
         <h1 class="name"><span class="surname">易</span>丽萍</h1>
         <div class="motto">不入流，也是流。</div>
         
-        <!-- 竖排诗词小字 -->
+        <!-- 竖排诗词小字（连在一起） -->
         <div class="verse-note">
-          <span>林花谢了春红，太匆匆。无奈朝来寒雨晚来风。</span>
-          <span>胭脂泪，相留醉，几时重。自是人生长恨水长东。</span>
+          林花谢了春红，太匆匆。<br>无奈朝来寒雨晚来风。<br><br>胭脂泪，相留醉，几时重。<br>自是人生长恨水长东。
         </div>
       </div>
     </section>
