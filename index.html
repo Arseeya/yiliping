@@ -1,7 +1,576 @@
 <!DOCTYPE html>
-<html>
-<head><title>易丽萍的网站</title></head>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>易丽萍 · 简牍</title>
+  <style>
+    /* ---------- 全局中式基底 ---------- */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      background: #f8f5f0;  /* 宣纸底色 */
+      background-image: 
+        radial-gradient(circle at 20% 30%, rgba(200, 180, 160, 0.03) 0%, transparent 25%),
+        radial-gradient(circle at 90% 70%, rgba(180, 160, 140, 0.03) 0%, transparent 30%);
+      font-family: "Noto Serif SC", "Songti SC", "SimSun", "STSong", serif;
+      color: #2e2a28;
+      line-height: 1.7;
+      padding: 2rem 1.2rem;
+      display: flex;
+      justify-content: center;
+      min-height: 100vh;
+    }
+
+    /* 主纸页 */
+    .paper {
+      max-width: 860px;
+      width: 100%;
+      background: #fffcf8;
+      border: 1px solid #e0d7cf;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.02), 0 10px 30px -18px rgba(80, 60, 40, 0.15);
+      padding: 3rem 2.8rem;
+      position: relative;
+    }
+
+    /* 细框装饰——中式册页感 */
+    .paper::before {
+      content: "";
+      position: absolute;
+      top: 14px;
+      left: 14px;
+      right: 14px;
+      bottom: 14px;
+      border: 1px solid #eee8e2;
+      pointer-events: none;
+      border-radius: 1px;
+    }
+
+    /* ---------- 模块分隔 ---------- */
+    .module {
+      margin-bottom: 2.8rem;
+      position: relative;
+      z-index: 1;
+    }
+
+    /* 模块小标题——竖排红印式 */
+    .module-label {
+      display: flex;
+      align-items: center;
+      gap: 0.8rem;
+      margin-bottom: 1.3rem;
+    }
+
+    .module-label .seal {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 26px;
+      height: 26px;
+      background: #c44d3a;      /* 朱砂 */
+      color: #fff8f0;
+      font-size: 0.7rem;
+      font-weight: 600;
+      border-radius: 3px;
+      letter-spacing: 1px;
+      font-family: "Noto Serif SC", "Songti SC", serif;
+      box-shadow: 0 1px 2px rgba(150, 50, 30, 0.15);
+      user-select: none;
+    }
+
+    .module-label .line {
+      flex: 1;
+      height: 1px;
+      background: linear-gradient(90deg, #d9cec4 0%, #e8e0d8 60%, transparent 100%);
+    }
+
+    /* ---------- 模块一 · 题签 ---------- */
+    .title-block {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      padding: 0.5rem 0 0.8rem;
+    }
+
+    /* 圆形头像框，带一点印章感 */
+    .avatar-frame {
+      width: 110px;
+      height: 110px;
+      border-radius: 50%;
+      background: #ece5dd;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 1.2rem;
+      border: 2px solid #d9cec4;
+      box-shadow: 0 0 0 6px #fffcf8, 0 0 0 7px #eee8e2;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .avatar-frame .avatar-text {
+      font-size: 2.8rem;
+      font-weight: 500;
+      color: #6b4e3a;
+      letter-spacing: 2px;
+      font-family: "Noto Serif SC", "Songti SC", serif;
+      user-select: none;
+    }
+
+    /* 头像旁的小注释（AI吐槽） */
+    .avatar-note {
+      font-size: 0.7rem;
+      color: #b0a69c;
+      margin-top: -0.3rem;
+      margin-bottom: 0.6rem;
+      letter-spacing: 0.3px;
+      font-style: italic;
+      max-width: 280px;
+    }
+
+    .name {
+      font-size: 2.4rem;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      color: #1f1b18;
+      margin-bottom: 0.2rem;
+      line-height: 1.3;
+    }
+
+    .name .surname {
+      color: #c44d3a;
+    }
+
+    /* 题记——叛逆那句 */
+    .motto {
+      font-size: 1rem;
+      color: #8a7e72;
+      margin-top: 0.5rem;
+      letter-spacing: 0.12em;
+      font-style: normal;
+      border-top: 1px solid #eee8e2;
+      border-bottom: 1px solid #eee8e2;
+      padding: 0.5rem 1.8rem;
+      display: inline-block;
+      font-weight: 400;
+      position: relative;
+    }
+
+    .motto::before,
+    .motto::after {
+      content: "·";
+      color: #c44d3a;
+      margin: 0 0.5rem;
+      font-size: 1.4rem;
+      line-height: 1;
+      vertical-align: middle;
+    }
+
+    /* ---------- 模块二 · 名帖标签 ---------- */
+    .tag-cloud {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.7rem 1rem;
+      padding: 0.4rem 0 0.2rem;
+      justify-content: center;
+    }
+
+    .tag-item {
+      font-size: 0.82rem;
+      color: #5f554b;
+      border: 1px solid #e2d9d0;
+      padding: 0.28rem 1rem;
+      border-radius: 2px;
+      background: #fdfaf6;
+      letter-spacing: 0.03em;
+      transition: all 0.15s ease;
+      font-family: "Noto Serif SC", "Songti SC", serif;
+      white-space: nowrap;
+    }
+
+    .tag-item:hover {
+      background: #f5efe8;
+      border-color: #c9bdb0;
+    }
+
+    /* 叛逆标签用红色虚线框 */
+    .tag-item.rebel {
+      border: 1px dashed #c44d3a;
+      color: #b84b38;
+      background: #fdf6f3;
+    }
+
+    /* ---------- 模块三 · 自述 ---------- */
+    .quote-block {
+      border-left: 3px solid #c44d3a;
+      padding: 0.8rem 1.4rem 0.8rem 1.6rem;
+      background: #fbf7f3;
+      margin-bottom: 1.4rem;
+      font-size: 1.05rem;
+      color: #3f3833;
+      line-height: 1.8;
+      letter-spacing: 0.03em;
+      font-style: italic;
+    }
+
+    .intro-lines {
+      display: flex;
+      flex-direction: column;
+      gap: 0.6rem;
+      font-size: 0.95rem;
+      color: #4f4842;
+      letter-spacing: 0.02em;
+      padding-left: 0.2rem;
+    }
+
+    .intro-lines p {
+      margin: 0;
+    }
+
+    .intro-lines .sub-note {
+      font-size: 0.82rem;
+      color: #a89e94;
+      margin-top: 0.4rem;
+      letter-spacing: 0.05em;
+    }
+
+    /* ---------- 模块四 · 笔墨（文章列表） ---------- */
+    .post-list {
+      display: flex;
+      flex-direction: column;
+      gap: 0.1rem;
+    }
+
+    .post-row {
+      display: flex;
+      align-items: baseline;
+      gap: 1.2rem;
+      padding: 0.9rem 0.2rem 0.9rem 0;
+      border-bottom: 1px solid #f0eae4;
+      transition: background 0.15s;
+    }
+
+    .post-row:hover {
+      background: #fdf9f5;
+    }
+
+    .post-row .index {
+      font-size: 0.75rem;
+      color: #c44d3a;
+      font-weight: 500;
+      letter-spacing: 0.08em;
+      min-width: 1.8rem;
+      font-family: "Noto Serif SC", "Songti SC", serif;
+    }
+
+    .post-row .post-main {
+      flex: 1;
+    }
+
+    .post-row .post-title {
+      font-size: 1.1rem;
+      font-weight: 500;
+      color: #2e2a28;
+      letter-spacing: 0.02em;
+      text-decoration: none;
+      display: inline-block;
+      transition: color 0.15s;
+      line-height: 1.4;
+    }
+
+    .post-row .post-title:hover {
+      color: #b84b38;
+    }
+
+    .post-row .post-desc {
+      font-size: 0.82rem;
+      color: #9a8f85;
+      margin-top: 0.2rem;
+      line-height: 1.5;
+    }
+
+    .post-row .post-date {
+      font-size: 0.75rem;
+      color: #b8ada2;
+      letter-spacing: 0.03em;
+      white-space: nowrap;
+      font-family: "Noto Serif SC", "Songti SC", serif;
+      min-width: 5.2rem;
+      text-align: right;
+    }
+
+    /* ---------- 模块五 · 递帖 ---------- */
+    .connect-block {
+      text-align: center;
+    }
+
+    .connect-block .invite {
+      font-size: 0.95rem;
+      color: #5f554b;
+      margin-bottom: 1.2rem;
+      letter-spacing: 0.06em;
+    }
+
+    .connect-block .invite em {
+      font-style: normal;
+      color: #c44d3a;
+      font-weight: 500;
+    }
+
+    .social-row {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 1.2rem 2rem;
+      padding: 0.2rem 0;
+    }
+
+    .social-row a {
+      color: #6b6158;
+      text-decoration: none;
+      font-size: 0.88rem;
+      letter-spacing: 0.05em;
+      border-bottom: 1px dotted #d9cec4;
+      padding-bottom: 0.15rem;
+      transition: color 0.15s, border-color 0.15s;
+      font-family: "Noto Serif SC", "Songti SC", serif;
+    }
+
+    .social-row a:hover {
+      color: #b84b38;
+      border-bottom-color: #b84b38;
+    }
+
+    /* ---------- 页脚 ---------- */
+    .footer-note {
+      text-align: center;
+      font-size: 0.7rem;
+      color: #b8ada2;
+      letter-spacing: 0.1em;
+      border-top: 1px solid #f0eae4;
+      padding-top: 1.2rem;
+      margin-top: 1rem;
+      font-family: "Noto Serif SC", "Songti SC", serif;
+    }
+
+    .footer-note .red-dot {
+      color: #c44d3a;
+      margin: 0 0.3rem;
+    }
+
+    /* ---------- 响应式 ---------- */
+    @media (max-width: 600px) {
+      body {
+        padding: 1rem 0.8rem;
+      }
+
+      .paper {
+        padding: 2.2rem 1.4rem;
+      }
+
+      .paper::before {
+        top: 10px;
+        left: 10px;
+        right: 10px;
+        bottom: 10px;
+      }
+
+      .name {
+        font-size: 1.9rem;
+      }
+
+      .avatar-frame {
+        width: 88px;
+        height: 88px;
+      }
+
+      .avatar-frame .avatar-text {
+        font-size: 2.2rem;
+      }
+
+      .motto {
+        font-size: 0.85rem;
+        padding: 0.4rem 1rem;
+        letter-spacing: 0.08em;
+      }
+
+      .quote-block {
+        font-size: 0.95rem;
+        padding: 0.7rem 1rem 0.7rem 1.2rem;
+      }
+
+      .post-row {
+        flex-wrap: wrap;
+        gap: 0.4rem 0.8rem;
+        padding: 0.8rem 0.2rem;
+      }
+
+      .post-row .post-date {
+        min-width: auto;
+        text-align: left;
+        width: 100%;
+        font-size: 0.7rem;
+        padding-left: 2.8rem;
+      }
+
+      .post-row .index {
+        min-width: 1.4rem;
+      }
+
+      .post-row .post-title {
+        font-size: 1rem;
+      }
+
+      .social-row {
+        gap: 0.8rem 1.2rem;
+      }
+
+      .tag-cloud {
+        gap: 0.5rem 0.7rem;
+      }
+
+      .tag-item {
+        font-size: 0.75rem;
+        padding: 0.2rem 0.7rem;
+      }
+    }
+  </style>
+</head>
 <body>
-    <h1>Hello! 网站搭好啦！</h1>
+  <main class="paper">
+
+    <!-- ========== 模块一 · 题签 ========== -->
+    <section class="module">
+      <div class="module-label">
+        <span class="seal">一</span>
+        <span class="line"></span>
+      </div>
+
+      <div class="title-block">
+        <div class="avatar-frame">
+          <span class="avatar-text">易</span>
+        </div>
+        <div class="avatar-note">图为AI所绘——不过我觉得她没我好看，这AI纯属吃干饭的。</div>
+        <h1 class="name"><span class="surname">易</span>丽萍</h1>
+        <div class="motto">不入流，也是流。</div>
+      </div>
+    </section>
+
+    <!-- ========== 模块二 · 名帖 ========== -->
+    <section class="module">
+      <div class="module-label">
+        <span class="seal">二</span>
+        <span class="line"></span>
+      </div>
+
+      <div class="tag-cloud">
+        <span class="tag-item">江西</span>
+        <span class="tag-item">高三</span>
+        <span class="tag-item">十七岁</span>
+        <span class="tag-item">水瓶座</span>
+        <span class="tag-item">2月1日</span>
+        <span class="tag-item">INFP</span>
+        <span class="tag-item rebel">不太合群</span>
+        <span class="tag-item">中文 · 江西方言 · 一点点英语</span>
+      </div>
+    </section>
+
+    <!-- ========== 模块三 · 自述 ========== -->
+    <section class="module">
+      <div class="module-label">
+        <span class="seal">三</span>
+        <span class="line"></span>
+      </div>
+
+      <div class="quote-block">
+        我很难评价自己，所以评论权就交给所有认识我、和看到这个网站的人。
+      </div>
+
+      <div class="intro-lines">
+        <p>来自江西的高三学生，十七岁，水瓶座。</p>
+        <p>朋友不少，也还想认识更多——路过这里的话，欢迎打个招呼。</p>
+        <p class="sub-note">嗯，就这样吧。</p>
+      </div>
+    </section>
+
+    <!-- ========== 模块四 · 笔墨 ========== -->
+    <section class="module">
+      <div class="module-label">
+        <span class="seal">四</span>
+        <span class="line"></span>
+      </div>
+
+      <div class="post-list">
+        <!-- 文章 1 -->
+        <div class="post-row">
+          <span class="index">〇一</span>
+          <div class="post-main">
+            <a href="#" class="post-title">开始搭建个人博客</a>
+            <div class="post-desc">用 GitHub Pages 和 Cloudflare 搭纯静态博客的完整记录。</div>
+          </div>
+          <span class="post-date">2025.03.12</span>
+        </div>
+
+        <!-- 文章 2 -->
+        <div class="post-row">
+          <span class="index">〇二</span>
+          <div class="post-main">
+            <a href="#" class="post-title">学习笔记：JS 异步编程</a>
+            <div class="post-desc">Promise 与 async/await 的梳理，以及踩过的坑。</div>
+          </div>
+          <span class="post-date">2025.02.28</span>
+        </div>
+
+        <!-- 文章 3 -->
+        <div class="post-row">
+          <span class="index">〇三</span>
+          <div class="post-main">
+            <a href="#" class="post-title">读《被讨厌的勇气》</a>
+            <div class="post-desc">阿德勒心理学的笔记，以及一些个人感想。</div>
+          </div>
+          <span class="post-date">2025.02.10</span>
+        </div>
+
+        <!-- 文章 4 -->
+        <div class="post-row">
+          <span class="index">〇四</span>
+          <div class="post-main">
+            <a href="#" class="post-title">周末随想 · 慢下来</a>
+            <div class="post-desc">喝杯茶、散散步，整理房间也是一种充电。</div>
+          </div>
+          <span class="post-date">2025.01.20</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========== 模块五 · 递帖 ========== -->
+    <section class="module">
+      <div class="module-label">
+        <span class="seal">五</span>
+        <span class="line"></span>
+      </div>
+
+      <div class="connect-block">
+        <p class="invite">如果你也想认识我，<em>从下面任选一个方式</em>。</p>
+        <div class="social-row">
+          <a href="#" target="_blank" rel="noopener noreferrer">GitHub</a>
+          <a href="#" target="_blank" rel="noopener noreferrer">邮箱</a>
+          <a href="#" target="_blank" rel="noopener noreferrer">微博</a>
+          <a href="#" target="_blank" rel="noopener noreferrer">RSS</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========== 页脚 ========== -->
+    <div class="footer-note">
+      易丽萍<span class="red-dot">·</span>yiliping.kdns.fr
+    </div>
+
+  </main>
 </body>
 </html>
