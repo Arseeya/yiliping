@@ -97,7 +97,7 @@
       padding: 0.5rem 0 0.8rem;
     }
 
-    /* 圆形头像框，带一点印章感 */
+    /* 圆形头像框，带一点印章感，图片尺寸 768*768 */
     .avatar-frame {
       width: 110px;
       height: 110px;
@@ -113,13 +113,11 @@
       overflow: hidden;
     }
 
-    .avatar-frame .avatar-text {
-      font-size: 2.8rem;
-      font-weight: 500;
-      color: #6b4e3a;
-      letter-spacing: 2px;
-      font-family: "Noto Serif SC", "Songti SC", serif;
-      user-select: none;
+    .avatar-frame img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
     }
 
     /* 头像旁的小注释（AI吐槽） */
@@ -239,72 +237,7 @@
       letter-spacing: 0.05em;
     }
 
-    /* ---------- 模块四 · 笔墨（文章列表） ---------- */
-    .post-list {
-      display: flex;
-      flex-direction: column;
-      gap: 0.1rem;
-    }
-
-    .post-row {
-      display: flex;
-      align-items: baseline;
-      gap: 1.2rem;
-      padding: 0.9rem 0.2rem 0.9rem 0;
-      border-bottom: 1px solid #f0eae4;
-      transition: background 0.15s;
-    }
-
-    .post-row:hover {
-      background: #fdf9f5;
-    }
-
-    .post-row .index {
-      font-size: 0.75rem;
-      color: #c44d3a;
-      font-weight: 500;
-      letter-spacing: 0.08em;
-      min-width: 1.8rem;
-      font-family: "Noto Serif SC", "Songti SC", serif;
-    }
-
-    .post-row .post-main {
-      flex: 1;
-    }
-
-    .post-row .post-title {
-      font-size: 1.1rem;
-      font-weight: 500;
-      color: #2e2a28;
-      letter-spacing: 0.02em;
-      text-decoration: none;
-      display: inline-block;
-      transition: color 0.15s;
-      line-height: 1.4;
-    }
-
-    .post-row .post-title:hover {
-      color: #b84b38;
-    }
-
-    .post-row .post-desc {
-      font-size: 0.82rem;
-      color: #9a8f85;
-      margin-top: 0.2rem;
-      line-height: 1.5;
-    }
-
-    .post-row .post-date {
-      font-size: 0.75rem;
-      color: #b8ada2;
-      letter-spacing: 0.03em;
-      white-space: nowrap;
-      font-family: "Noto Serif SC", "Songti SC", serif;
-      min-width: 5.2rem;
-      text-align: right;
-    }
-
-    /* ---------- 模块五 · 递帖 ---------- */
+    /* ---------- 模块四 · 递帖 ---------- */
     .connect-block {
       text-align: center;
     }
@@ -389,10 +322,6 @@
         height: 88px;
       }
 
-      .avatar-frame .avatar-text {
-        font-size: 2.2rem;
-      }
-
       .motto {
         font-size: 0.85rem;
         padding: 0.4rem 1rem;
@@ -402,28 +331,6 @@
       .quote-block {
         font-size: 0.95rem;
         padding: 0.7rem 1rem 0.7rem 1.2rem;
-      }
-
-      .post-row {
-        flex-wrap: wrap;
-        gap: 0.4rem 0.8rem;
-        padding: 0.8rem 0.2rem;
-      }
-
-      .post-row .post-date {
-        min-width: auto;
-        text-align: left;
-        width: 100%;
-        font-size: 0.7rem;
-        padding-left: 2.8rem;
-      }
-
-      .post-row .index {
-        min-width: 1.4rem;
-      }
-
-      .post-row .post-title {
-        font-size: 1rem;
       }
 
       .social-row {
@@ -453,7 +360,7 @@
 
       <div class="title-block">
         <div class="avatar-frame">
-          <span class="avatar-text">易</span>
+          <img src="pitures/ylpz.jpg" alt="易丽萍的照片" width="768" height="768">
         </div>
         <div class="avatar-note">图为AI所绘——不过我觉得她没我好看，这AI纯属吃干饭的。</div>
         <h1 class="name"><span class="surname">易</span>丽萍</h1>
@@ -498,70 +405,17 @@
       </div>
     </section>
 
-    <!-- ========== 模块四 · 笔墨 ========== -->
+    <!-- ========== 模块四 · 递帖 ========== -->
     <section class="module">
       <div class="module-label">
         <span class="seal">四</span>
         <span class="line"></span>
       </div>
 
-      <div class="post-list">
-        <!-- 文章 1 -->
-        <div class="post-row">
-          <span class="index">〇一</span>
-          <div class="post-main">
-            <a href="#" class="post-title">开始搭建个人博客</a>
-            <div class="post-desc">用 GitHub Pages 和 Cloudflare 搭纯静态博客的完整记录。</div>
-          </div>
-          <span class="post-date">2025.03.12</span>
-        </div>
-
-        <!-- 文章 2 -->
-        <div class="post-row">
-          <span class="index">〇二</span>
-          <div class="post-main">
-            <a href="#" class="post-title">学习笔记：JS 异步编程</a>
-            <div class="post-desc">Promise 与 async/await 的梳理，以及踩过的坑。</div>
-          </div>
-          <span class="post-date">2025.02.28</span>
-        </div>
-
-        <!-- 文章 3 -->
-        <div class="post-row">
-          <span class="index">〇三</span>
-          <div class="post-main">
-            <a href="#" class="post-title">读《被讨厌的勇气》</a>
-            <div class="post-desc">阿德勒心理学的笔记，以及一些个人感想。</div>
-          </div>
-          <span class="post-date">2025.02.10</span>
-        </div>
-
-        <!-- 文章 4 -->
-        <div class="post-row">
-          <span class="index">〇四</span>
-          <div class="post-main">
-            <a href="#" class="post-title">周末随想 · 慢下来</a>
-            <div class="post-desc">喝杯茶、散散步，整理房间也是一种充电。</div>
-          </div>
-          <span class="post-date">2025.01.20</span>
-        </div>
-      </div>
-    </section>
-
-    <!-- ========== 模块五 · 递帖 ========== -->
-    <section class="module">
-      <div class="module-label">
-        <span class="seal">五</span>
-        <span class="line"></span>
-      </div>
-
       <div class="connect-block">
-        <p class="invite">如果你也想认识我，<em>从下面任选一个方式</em>。</p>
+        <p class="invite">如果你也想认识我，<em>写信给我</em>。</p>
         <div class="social-row">
-          <a href="#" target="_blank" rel="noopener noreferrer">GitHub</a>
-          <a href="#" target="_blank" rel="noopener noreferrer">邮箱</a>
-          <a href="#" target="_blank" rel="noopener noreferrer">微博</a>
-          <a href="#" target="_blank" rel="noopener noreferrer">RSS</a>
+          <a href="mailto:arseeya@outlook.com">arseeya@outlook.com</a>
         </div>
       </div>
     </section>
