@@ -7,7 +7,12 @@
   <style>
     /* ---------- 全局基底 ---------- */
     * { margin: 0; padding: 0; box-sizing: border-box; }
-    ::selection { background: #c44d3a; color: #fffcf8; }
+    
+    /* 彩蛋1：选中文字变朱砂色 */
+    ::selection {
+      background: #c44d3a;
+      color: #fffcf8;
+    }
 
     body {
       background: #f2ede6;
@@ -54,7 +59,6 @@
 
     .music-toggle:hover { color: #c44d3a; border-color: #c44d3a; }
 
-    /* 播放中的状态——朱红印 */
     .music-toggle.playing {
       background: #c44d3a;
       color: #fffcf8;
@@ -94,11 +98,27 @@
       display: flex; flex-direction: column; align-items: center; text-align: center;
       padding: 0.5rem 0 1.5rem; position: relative;
     }
+    
     .name {
       font-size: 2.6rem; font-weight: 600; letter-spacing: 0.1em;
       color: #1f1b18; margin-bottom: 0.4rem; line-height: 1.3;
+      cursor: default;
     }
     .name .surname { color: #c44d3a; }
+
+    /* 彩蛋2：双击名字出现的批注 */
+    .name-comment {
+      font-size: 0.75rem;
+      color: #b5a99e;
+      opacity: 0;
+      transition: opacity 0.5s ease;
+      position: absolute;
+      top: 3.5rem;
+      font-style: italic;
+      pointer-events: none;
+    }
+    .name-comment.show { opacity: 1; }
+
     .motto {
       font-size: 1rem; color: #8a7e72; margin-top: 0.5rem; letter-spacing: 0.15em;
       border-top: 1px solid #eee8e2; border-bottom: 1px solid #eee8e2;
@@ -165,8 +185,36 @@
       text-align: center; font-size: 0.7rem; color: #b8ada2;
       letter-spacing: 0.1em; border-top: 1px solid #f0eae4;
       padding-top: 1.2rem; margin-top: 1.5rem;
+      cursor: default;
+      user-select: none;
     }
     .footer-note .red-dot { color: #c44d3a; margin: 0 0.3rem; }
+
+    /* 彩蛋3：页脚暗语 */
+    .footer-easter-egg {
+      display: block;
+      height: 0;
+      overflow: hidden;
+      opacity: 0;
+      color: #c44d3a;
+      font-size: 0.85rem;
+      font-weight: 600;
+      letter-spacing: 0.2em;
+      margin-top: 0.5rem;
+      transition: all 0.5s ease;
+    }
+    .footer-easter-egg.show {
+      height: auto;
+      opacity: 1;
+      animation: glitch 0.5s ease;
+    }
+    @keyframes glitch {
+      0% { transform: translateX(0); }
+      25% { transform: translateX(-2px); }
+      50% { transform: translateX(2px); }
+      75% { transform: translateX(-1px); }
+      100% { transform: translateX(0); }
+    }
 
     /* 响应式 */
     @media (max-width: 700px) {
@@ -191,7 +239,6 @@
 <body>
   <main class="paper">
 
-    <!-- 纯净的音频元素，没有原生进度条 -->
     <audio id="bgMusic" src="music/千年-刘宇.mp3" loop preload="auto" playsinline></audio>
     
     <div class="music-toggle" id="musicBtn" title="点击播放/暂停背景音乐">
@@ -202,7 +249,9 @@
     <section class="module">
       <div class="module-label"><span class="seal-no">一</span><span class="line"></span></div>
       <div class="title-block">
-        <h1 class="name"><span class="surname">易</span>丽萍</h1>
+        <!-- 双击名字触发彩蛋 -->
+        <h1 class="name" id="triggerName"><span class="surname">易</span>丽萍</h1>
+        <div class="name-comment" id="nameComment">别点了，我不接受任何评价。</div>
         <div class="motto">不入流，也是流。</div>
         <div class="verse-note">
           林花谢了春红，太匆匆。<br>无奈朝来寒雨晚来风。<br><br>胭脂泪，相留醉，几时重。<br>自是人生长恨水长东。
@@ -259,62 +308,108 @@
     </div>
 
     <!-- ========== 页脚 ========== -->
-    <div class="footer-note">
+    <div class="footer-note" id="footerTrigger">
       易丽萍<span class="red-dot">·</span>yiliping.kdns.fr
+      <span class="footer-easter-egg" id="footerEgg">规矩是给守规矩的人定的。</span>
     </div>
 
   </main>
 
   <script>
+    /* ---------- 音乐逻辑 ---------- */
     const audio = document.getElementById('bgMusic');
     const btn = document.getElementById('musicBtn');
     
-    // 状态标记
     let isPlaying = false; 
-    let isUserManuallyPaused = false; // 记录用户是否主动点了关闭，如果是，就不再自动触发
+    let isUserManuallyPaused = false; 
 
-    // 播放音乐的函数（封装一下）
     function playMusic() {
       if(isPlaying) return;
       audio.play().then(() => {
         isPlaying = true;
         btn.classList.add('playing');
+        btn.title = "点击关闭背景音乐";
       }).catch((err) => {
-        // 如果蓝牙或者系统仍然拦截，就静默失败，等用户点按钮
         console.log("等待真实的用户交互...", err);
       });
     }
 
-    // 1. 全局点击：伪自动播放
-    // 当用户第一次点击网页任何地方时，如果没播且用户没手动关过，就自动播
+    // 伪自动播放：点页面任意地方触发
     document.addEventListener('click', function(e) {
-      // 如果用户点的是右上角的按钮，那就交给按钮自己的逻辑，不在这里处理
       if (e.target.closest('#musicBtn')) return;
-      
       if (!isPlaying && !isUserManuallyPaused) {
         playMusic();
       }
     });
 
-    // 2. 点击按钮：手动开关
+    // 按钮控制
     btn.addEventListener('click', function(e) {
-      e.stopPropagation(); // 阻止事件冒泡到 document
-      
+      e.stopPropagation(); 
       if (isPlaying) {
-        // 如果正在播，就暂停，并打上“用户手动关了”的标记
         audio.pause();
         isPlaying = false;
         isUserManuallyPaused = true; 
         btn.classList.remove('playing');
+        btn.title = "点击开启背景音乐";
       } else {
-        // 如果没播，就播放
         audio.play().then(() => {
           isPlaying = true;
-          isUserManuallyPaused = false; // 用户手动打开了，解除标记
+          isUserManuallyPaused = false; 
           btn.classList.add('playing');
+          btn.title = "点击关闭背景音乐";
         }).catch((error) => {
           alert('音乐播放失败，请检查文件是否正常。');
         });
+      }
+    });
+
+    /* ---------- 彩蛋 2：双击名字 ---------- */
+    const triggerName = document.getElementById('triggerName');
+    const nameComment = document.getElementById('nameComment');
+    
+    triggerName.addEventListener('dblclick', () => {
+      nameComment.classList.add('show');
+      setTimeout(() => {
+        nameComment.classList.remove('show');
+      }, 3000); // 3秒后消失
+    });
+
+    /* ---------- 彩蛋 3：键盘秘技 & 连击页脚 ---------- */
+    const footerEgg = document.getElementById('footerEgg');
+    const footerTrigger = document.getElementById('footerTrigger');
+    
+    // 键盘输入 ↑ ↑ ↓ ↓ ← → ← → B A
+    let konamiCode = ['ArrowUp', 'ArrowUp', 'ArrowDown', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'ArrowLeft', 'ArrowRight', 'b', 'a'];
+    let konamiIndex = 0;
+
+    document.addEventListener('keydown', (e) => {
+      if (e.key.toLowerCase() === konamiCode[konamiIndex].toLowerCase() || e.key === konamiCode[konamiIndex]) {
+        konamiIndex++;
+        if (konamiIndex === konamiCode.length) {
+          footerEgg.classList.add('show');
+          konamiIndex = 0; // 重置
+        }
+      } else {
+        konamiIndex = 0; // 输错就重置
+      }
+    });
+
+    // 手机端：连击页脚 5 下
+    let tapCount = 0;
+    let tapTimer;
+    
+    footerTrigger.addEventListener('click', () => {
+      tapCount++;
+      clearTimeout(tapTimer);
+      
+      // 500ms 内没有继续点击，就重置计数
+      tapTimer = setTimeout(() => {
+        tapCount = 0;
+      }, 500);
+
+      if (tapCount >= 5) {
+        footerEgg.classList.add('show');
+        tapCount = 0;
       }
     });
   </script>
