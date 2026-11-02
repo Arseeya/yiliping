@@ -6,17 +6,8 @@
   <title>易丽萍 · 简牍</title>
   <style>
     /* ---------- 全局基底 ---------- */
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
-
-    /* 文字选中变成朱砂色 */
-    ::selection {
-      background: #c44d3a;
-      color: #fffcf8;
-    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    ::selection { background: #c44d3a; color: #fffcf8; }
 
     body {
       background: #f2ede6;
@@ -29,7 +20,6 @@
       min-height: 100vh;
     }
 
-    /* 主纸页——极简版 */
     .paper {
       max-width: 780px;
       width: 100%;
@@ -59,12 +49,10 @@
       color: #8a7e72;
       transition: all 0.3s ease;
       z-index: 10;
+      -webkit-tap-highlight-color: transparent; /* 去除手机点击蓝框 */
     }
 
-    .music-toggle:hover {
-      color: #c44d3a;
-      border-color: #c44d3a;
-    }
+    .music-toggle:hover { color: #c44d3a; border-color: #c44d3a; }
 
     /* 播放中的状态——朱红印 */
     .music-toggle.playing {
@@ -74,268 +62,120 @@
       box-shadow: 0 2px 5px rgba(150, 50, 30, 0.2);
     }
 
-    /* 播放时的旋转动画 */
-    .music-toggle.playing .icon {
-      animation: spin 4s linear infinite;
-    }
+    .music-toggle.playing .icon { animation: spin 4s linear infinite; }
+    @keyframes spin { 100% { transform: rotate(360deg); } }
 
-    @keyframes spin {
-      100% { transform: rotate(360deg); }
-    }
-
-    /* ---------- 模块分隔 ---------- */
-    .module {
-      margin-bottom: 3.2rem;
-      position: relative;
-    }
-
+    /* ---------- 模块与排版 ---------- */
+    .module { margin-bottom: 3.2rem; position: relative; }
+    
     .module-label {
       display: flex;
       align-items: center;
       gap: 0.8rem;
       margin-bottom: 1.3rem;
     }
-
     .module-label .seal-no {
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      width: 24px;
-      height: 24px;
-      background: #c44d3a;
-      color: #fff8f0;
-      font-size: 0.65rem;
-      font-weight: 600;
-      border-radius: 2px;
-      letter-spacing: 1px;
+      width: 24px; height: 24px;
+      background: #c44d3a; color: #fff8f0;
+      font-size: 0.65rem; font-weight: 600;
+      border-radius: 2px; letter-spacing: 1px;
       user-select: none;
     }
-
     .module-label .line {
-      flex: 1;
-      height: 1px;
+      flex: 1; height: 1px;
       background: linear-gradient(90deg, #e0d7cf 0%, #f0eae4 60%, transparent 100%);
     }
 
-    /* ---------- 模块一 · 题签 ---------- */
+    /* 模块一 */
     .title-block {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      text-align: center;
-      padding: 0.5rem 0 1.5rem;
-      position: relative;
+      display: flex; flex-direction: column; align-items: center; text-align: center;
+      padding: 0.5rem 0 1.5rem; position: relative;
     }
-
     .name {
-      font-size: 2.6rem;
-      font-weight: 600;
-      letter-spacing: 0.1em;
-      color: #1f1b18;
-      margin-bottom: 0.4rem;
-      line-height: 1.3;
+      font-size: 2.6rem; font-weight: 600; letter-spacing: 0.1em;
+      color: #1f1b18; margin-bottom: 0.4rem; line-height: 1.3;
     }
-
-    .name .surname {
-      color: #c44d3a;
-    }
-
+    .name .surname { color: #c44d3a; }
     .motto {
-      font-size: 1rem;
-      color: #8a7e72;
-      margin-top: 0.5rem;
-      letter-spacing: 0.15em;
-      border-top: 1px solid #eee8e2;
-      border-bottom: 1px solid #eee8e2;
-      padding: 0.5rem 1.8rem;
-      display: inline-block;
+      font-size: 1rem; color: #8a7e72; margin-top: 0.5rem; letter-spacing: 0.15em;
+      border-top: 1px solid #eee8e2; border-bottom: 1px solid #eee8e2;
+      padding: 0.5rem 1.8rem; display: inline-block;
     }
+    .motto::before, .motto::after { content: "·"; color: #c44d3a; margin: 0 0.5rem; font-size: 1.4rem; vertical-align: middle; }
 
-    .motto::before,
-    .motto::after {
-      content: "·";
-      color: #c44d3a;
-      margin: 0 0.5rem;
-      font-size: 1.4rem;
-      line-height: 1;
-      vertical-align: middle;
-    }
-
-    /* 竖排诗词小字 */
     .verse-note {
-      position: absolute;
-      right: -1rem;
-      top: 0;
-      writing-mode: vertical-rl;
-      text-orientation: upright;
-      font-size: 0.75rem;
-      color: #b5a99e;
-      letter-spacing: 0.15em;
-      line-height: 1.8;
+      position: absolute; right: -1rem; top: 0;
+      writing-mode: vertical-rl; text-orientation: upright;
+      font-size: 0.75rem; color: #b5a99e; letter-spacing: 0.15em; line-height: 1.8;
       user-select: none;
     }
 
-    /* ---------- 模块二 · 名帖标签 ---------- */
-    .tag-cloud {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 0.7rem 1rem;
-      padding: 0.4rem 0;
-      justify-content: center;
-    }
-
+    /* 模块二 */
+    .tag-cloud { display: flex; flex-wrap: wrap; gap: 0.7rem 1rem; padding: 0.4rem 0; justify-content: center; }
     .tag-item {
-      font-size: 0.82rem;
-      color: #5f554b;
-      border: 1px solid #e2d9d0;
-      padding: 0.25rem 0.9rem;
-      border-radius: 2px;
-      background: #fdfaf6;
-      letter-spacing: 0.03em;
-      white-space: nowrap;
-      transition: all 0.2s ease;
+      font-size: 0.82rem; color: #5f554b; border: 1px solid #e2d9d0;
+      padding: 0.25rem 0.9rem; border-radius: 2px; background: #fdfaf6;
+      letter-spacing: 0.03em; white-space: nowrap; transition: all 0.2s ease;
     }
 
-    .tag-item:hover {
-      background: #f5efe8;
-      border-color: #c9bdb0;
-    }
-
-    /* ---------- 模块三 · 自述 ---------- */
+    /* 模块三 */
     .quote-block {
-      border-left: 3px solid #c44d3a;
-      padding: 0.8rem 1.4rem;
-      background: #fbf7f3;
-      margin-bottom: 1.4rem;
-      font-size: 1.05rem;
-      color: #3f3833;
-      line-height: 1.8;
-      font-style: italic;
+      border-left: 3px solid #c44d3a; padding: 0.8rem 1.4rem;
+      background: #fbf7f3; margin-bottom: 1.4rem;
+      font-size: 1.05rem; color: #3f3833; line-height: 1.8; font-style: italic;
     }
+    .intro-lines { display: flex; flex-direction: column; gap: 0.6rem; font-size: 0.95rem; color: #4f4842; padding-left: 0.2rem; }
+    .intro-lines .sub-note { font-size: 0.82rem; color: #a89e94; margin-top: 0.2rem; }
 
-    .intro-lines {
-      display: flex;
-      flex-direction: column;
-      gap: 0.6rem;
-      font-size: 0.95rem;
-      color: #4f4842;
-      padding-left: 0.2rem;
-    }
-
-    .intro-lines .sub-note {
-      font-size: 0.82rem;
-      color: #a89e94;
-      margin-top: 0.2rem;
-    }
-
-    /* ---------- 模块四 · 递帖 ---------- */
-    .connect-block {
-      text-align: center;
-    }
-
-    .connect-block .invite {
-      font-size: 0.95rem;
-      color: #5f554b;
-      margin-bottom: 1rem;
-      letter-spacing: 0.05em;
-    }
-
-    .connect-block .invite em {
-      font-style: normal;
-      color: #c44d3a;
-      font-weight: 500;
-    }
-
+    /* 模块四 */
+    .connect-block { text-align: center; }
+    .connect-block .invite { font-size: 0.95rem; color: #5f554b; margin-bottom: 1rem; letter-spacing: 0.05em; }
+    .connect-block .invite em { font-style: normal; color: #c44d3a; font-weight: 500; }
     .social-row a {
-      color: #6b6158;
-      text-decoration: none;
-      font-size: 0.9rem;
-      letter-spacing: 0.05em;
-      border-bottom: 1px dotted #d9cec4;
-      padding-bottom: 0.15rem;
-      transition: all 0.2s ease;
+      color: #6b6158; text-decoration: none; font-size: 0.9rem; letter-spacing: 0.05em;
+      border-bottom: 1px dotted #d9cec4; padding-bottom: 0.15rem; transition: all 0.2s ease;
     }
 
-    .social-row a:hover {
-      color: #c44d3a;
-      border-bottom-color: #c44d3a;
-    }
-
-    /* ---------- 落款区 ---------- */
+    /* 落款 */
     .signature {
-      display: flex;
-      justify-content: flex-end;
-      align-items: flex-end;
-      gap: 1.2rem;
-      margin-top: 1.5rem;
-      padding-right: 0.5rem;
+      display: flex; justify-content: flex-end; align-items: flex-end;
+      gap: 1.2rem; margin-top: 1.5rem; padding-right: 0.5rem;
     }
-
     .signature .sign-text {
-      text-align: right;
-      font-size: 0.78rem;
-      color: #8a7e72;
-      letter-spacing: 0.12em;
-      line-height: 1.9;
+      text-align: right; font-size: 0.78rem; color: #8a7e72; letter-spacing: 0.12em; line-height: 1.9;
     }
-
-    .signature .sign-text .sign-name {
-      font-size: 0.88rem;
-      color: #5f554b;
-    }
-
-    /* 朱文印章 */
+    .signature .sign-text .sign-name { font-size: 0.88rem; color: #5f554b; }
+    
+    /* 印章 */
     .red-seal {
-      width: 52px;
-      height: 52px;
-      background: #c44d3a;
-      border-radius: 2px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: #fff8f0;
-      font-size: 1.3rem;
-      font-weight: 600;
-      letter-spacing: 0.05em;
-      line-height: 1;
+      width: 52px; height: 52px; background: #c44d3a; border-radius: 2px;
+      display: flex; align-items: center; justify-content: center;
+      color: #fff8f0; font-size: 1.3rem; font-weight: 600;
+      letter-spacing: 0.05em; line-height: 1;
       box-shadow: 0 2px 5px rgba(150, 50, 30, 0.2);
-      flex-shrink: 0;
-      user-select: none;
-      writing-mode: vertical-rl;
-      text-orientation: upright;
-      transform: rotate(-2deg); /* 微微倾斜，更像手工盖章 */
+      flex-shrink: 0; user-select: none;
+      writing-mode: vertical-rl; text-orientation: upright;
     }
 
-    /* ---------- 页脚 ---------- */
+    /* 页脚 */
     .footer-note {
-      text-align: center;
-      font-size: 0.7rem;
-      color: #b8ada2;
-      letter-spacing: 0.1em;
-      border-top: 1px solid #f0eae4;
-      padding-top: 1.2rem;
-      margin-top: 1.5rem;
+      text-align: center; font-size: 0.7rem; color: #b8ada2;
+      letter-spacing: 0.1em; border-top: 1px solid #f0eae4;
+      padding-top: 1.2rem; margin-top: 1.5rem;
     }
+    .footer-note .red-dot { color: #c44d3a; margin: 0 0.3rem; }
 
-    .footer-note .red-dot {
-      color: #c44d3a;
-      margin: 0 0.3rem;
-    }
-
-    /* ---------- 响应式 ---------- */
+    /* 响应式 */
     @media (max-width: 700px) {
       .verse-note {
-        position: static;
-        writing-mode: horizontal-tb;
-        text-align: right;
-        margin-top: 1.5rem;
-        font-size: 0.7rem;
-        color: #b5a99e;
-        border-left: 1px solid #eee8e2;
-        padding-left: 0.8rem;
+        position: static; writing-mode: horizontal-tb; text-align: right;
+        margin-top: 1.5rem; font-size: 0.7rem; color: #b5a99e;
+        border-left: 1px solid #eee8e2; padding-left: 0.8rem;
       }
     }
-
     @media (max-width: 600px) {
       body { padding: 1.5rem 0.8rem; }
       .paper { padding: 2rem 1.4rem; }
@@ -351,38 +191,29 @@
 <body>
   <main class="paper">
 
-    <!-- 背景音乐播放器 -->
-    <audio id="bgMusic" src="music/千年-刘宇.mp3" loop></audio>
+    <!-- 背景音乐播放器（加上了 controls 属性方便测试，如果不想要可以删掉 controls） -->
+    <audio id="bgMusic" src="music/千年-刘宇.mp3" loop preload="auto"></audio>
     
     <!-- 音乐开关按钮 -->
-    <div class="music-toggle playing" id="musicBtn" title="关闭/开启背景音乐">
+    <div class="music-toggle" id="musicBtn" title="点击播放/暂停背景音乐">
       <span class="icon">声</span>
     </div>
 
-    <!-- ========== 模块一 · 题签 ========== -->
+    <!-- ========== 模块一 ========== -->
     <section class="module">
-      <div class="module-label">
-        <span class="seal-no">一</span>
-        <span class="line"></span>
-      </div>
-      
+      <div class="module-label"><span class="seal-no">一</span><span class="line"></span></div>
       <div class="title-block">
         <h1 class="name"><span class="surname">易</span>丽萍</h1>
         <div class="motto">不入流，也是流。</div>
-        
-        <!-- 竖排诗词小字 -->
         <div class="verse-note">
           林花谢了春红，太匆匆。<br>无奈朝来寒雨晚来风。<br><br>胭脂泪，相留醉，几时重。<br>自是人生长恨水长东。
         </div>
       </div>
     </section>
 
-    <!-- ========== 模块二 · 名帖 ========== -->
+    <!-- ========== 模块二 ========== -->
     <section class="module">
-      <div class="module-label">
-        <span class="seal-no">二</span>
-        <span class="line"></span>
-      </div>
+      <div class="module-label"><span class="seal-no">二</span><span class="line"></span></div>
       <div class="tag-cloud">
         <span class="tag-item">江西</span>
         <span class="tag-item">高三</span>
@@ -395,12 +226,9 @@
       </div>
     </section>
 
-    <!-- ========== 模块三 · 自述 ========== -->
+    <!-- ========== 模块三 ========== -->
     <section class="module">
-      <div class="module-label">
-        <span class="seal-no">三</span>
-        <span class="line"></span>
-      </div>
+      <div class="module-label"><span class="seal-no">三</span><span class="line"></span></div>
       <div class="quote-block">
         我很难评价自己，所以评论权就交给所有认识我、和看到这个网站的人。
       </div>
@@ -411,12 +239,9 @@
       </div>
     </section>
 
-    <!-- ========== 模块四 · 递帖 ========== -->
+    <!-- ========== 模块四 ========== -->
     <section class="module">
-      <div class="module-label">
-        <span class="seal-no">四</span>
-        <span class="line"></span>
-      </div>
+      <div class="module-label"><span class="seal-no">四</span><span class="line"></span></div>
       <div class="connect-block">
         <p class="invite">如果你也想认识我，<em>写信给我</em>。</p>
         <div class="social-row">
@@ -445,54 +270,23 @@
     const audio = document.getElementById('bgMusic');
     const btn = document.getElementById('musicBtn');
 
-    // 尝试自动播放（很多浏览器默认拦截，需要用户互动）
-    // 为了让默认状态显示为“开启”，我们先把按钮设为 playing 样式
-    // 页面加载后，用户第一次点击页面任何地方，尝试播放
-    
-    let isPlaying = false;
-    
-    // 初始化：尝试播放
-    function initAudio() {
-      audio.play().then(() => {
-        isPlaying = true;
-        btn.classList.add('playing');
-      }).catch((err) => {
-        // 自动播放被拦截，保持按钮样式，等用户点击
-        console.log('等待用户交互以播放音乐');
-        isPlaying = false;
-        btn.classList.remove('playing');
-      });
-    }
-
-    // 点击按钮控制播放/暂停
-    btn.addEventListener('click', (e) => {
-      e.stopPropagation(); // 阻止冒泡，防止触发页面点击播放
-      if (isPlaying) {
+    // 纯粹的点击事件控制
+    btn.addEventListener('click', function() {
+      if (audio.paused) {
+        // 如果当前是暂停的，就播放
+        audio.play().then(() => {
+          btn.classList.add('playing');
+        }).catch((error) => {
+          // 如果播放失败，弹窗提示原因
+          alert('音乐播放失败！请检查路径是否正确，或者文件是否损坏。');
+          console.error(error);
+        });
+      } else {
+        // 如果当前在播放，就暂停
         audio.pause();
         btn.classList.remove('playing');
-        isPlaying = false;
-      } else {
-        audio.play().then(() => {
-          btn.classList.add('playing');
-          isPlaying = true;
-        }).catch(err => console.log('播放失败:', err));
       }
     });
-
-    // 如果浏览器拦截了自动播放，当用户在页面上第一次点击时，尝试播放
-    document.addEventListener('click', function firstClick() {
-      if (!isPlaying) {
-        audio.play().then(() => {
-          btn.classList.add('playing');
-          isPlaying = true;
-        }).catch(() => {});
-      }
-      // 移除监听，只触发一次
-      document.removeEventListener('click', firstClick);
-    });
-
-    // 页面加载时尝试
-    window.addEventListener('DOMContentLoaded', initAudio);
   </script>
 </body>
 </html>
