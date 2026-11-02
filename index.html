@@ -12,6 +12,12 @@
       box-sizing: border-box;
     }
 
+    /* 文字选中变成朱砂色 */
+    ::selection {
+      background: #c44d3a;
+      color: #fffcf8;
+    }
+
     body {
       background: #f2ede6;
       font-family: "Noto Serif SC", "Songti SC", "SimSun", "STSong", serif;
@@ -34,9 +40,52 @@
       position: relative;
     }
 
+    /* ---------- 背景音乐开关 ---------- */
+    .music-toggle {
+      position: absolute;
+      top: 1.5rem;
+      right: 1.5rem;
+      width: 36px;
+      height: 36px;
+      background: #fffcf8;
+      border: 1px solid #e5ded5;
+      border-radius: 2px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      font-family: "Noto Serif SC", "Songti SC", serif;
+      font-size: 1rem;
+      color: #8a7e72;
+      transition: all 0.3s ease;
+      z-index: 10;
+    }
+
+    .music-toggle:hover {
+      color: #c44d3a;
+      border-color: #c44d3a;
+    }
+
+    /* 播放中的状态——朱红印 */
+    .music-toggle.playing {
+      background: #c44d3a;
+      color: #fffcf8;
+      border-color: #c44d3a;
+      box-shadow: 0 2px 5px rgba(150, 50, 30, 0.2);
+    }
+
+    /* 播放时的旋转动画 */
+    .music-toggle.playing .icon {
+      animation: spin 4s linear infinite;
+    }
+
+    @keyframes spin {
+      100% { transform: rotate(360deg); }
+    }
+
     /* ---------- 模块分隔 ---------- */
     .module {
-      margin-bottom: 2.8rem;
+      margin-bottom: 3.2rem;
       position: relative;
     }
 
@@ -112,7 +161,7 @@
       vertical-align: middle;
     }
 
-    /* 竖排诗词小字（连贯版） */
+    /* 竖排诗词小字 */
     .verse-note {
       position: absolute;
       right: -1rem;
@@ -144,6 +193,12 @@
       background: #fdfaf6;
       letter-spacing: 0.03em;
       white-space: nowrap;
+      transition: all 0.2s ease;
+    }
+
+    .tag-item:hover {
+      background: #f5efe8;
+      border-color: #c9bdb0;
     }
 
     /* ---------- 模块三 · 自述 ---------- */
@@ -198,6 +253,12 @@
       letter-spacing: 0.05em;
       border-bottom: 1px dotted #d9cec4;
       padding-bottom: 0.15rem;
+      transition: all 0.2s ease;
+    }
+
+    .social-row a:hover {
+      color: #c44d3a;
+      border-bottom-color: #c44d3a;
     }
 
     /* ---------- 落款区 ---------- */
@@ -242,6 +303,7 @@
       user-select: none;
       writing-mode: vertical-rl;
       text-orientation: upright;
+      transform: rotate(-2deg); /* 微微倾斜，更像手工盖章 */
     }
 
     /* ---------- 页脚 ---------- */
@@ -269,6 +331,8 @@
         margin-top: 1.5rem;
         font-size: 0.7rem;
         color: #b5a99e;
+        border-left: 1px solid #eee8e2;
+        padding-left: 0.8rem;
       }
     }
 
@@ -280,11 +344,20 @@
       .quote-block { font-size: 0.95rem; padding: 0.7rem 1rem; }
       .signature { gap: 0.8rem; padding-right: 0; }
       .red-seal { width: 46px; height: 46px; font-size: 1.15rem; }
+      .music-toggle { top: 1rem; right: 1rem; width: 32px; height: 32px; font-size: 0.9rem; }
     }
   </style>
 </head>
 <body>
   <main class="paper">
+
+    <!-- 背景音乐播放器 -->
+    <audio id="bgMusic" src="music/千年-刘宇.mp3" loop></audio>
+    
+    <!-- 音乐开关按钮 -->
+    <div class="music-toggle playing" id="musicBtn" title="关闭/开启背景音乐">
+      <span class="icon">声</span>
+    </div>
 
     <!-- ========== 模块一 · 题签 ========== -->
     <section class="module">
@@ -297,7 +370,7 @@
         <h1 class="name"><span class="surname">易</span>丽萍</h1>
         <div class="motto">不入流，也是流。</div>
         
-        <!-- 竖排诗词小字（连在一起） -->
+        <!-- 竖排诗词小字 -->
         <div class="verse-note">
           林花谢了春红，太匆匆。<br>无奈朝来寒雨晚来风。<br><br>胭脂泪，相留醉，几时重。<br>自是人生长恨水长东。
         </div>
@@ -367,5 +440,59 @@
     </div>
 
   </main>
+
+  <script>
+    const audio = document.getElementById('bgMusic');
+    const btn = document.getElementById('musicBtn');
+
+    // 尝试自动播放（很多浏览器默认拦截，需要用户互动）
+    // 为了让默认状态显示为“开启”，我们先把按钮设为 playing 样式
+    // 页面加载后，用户第一次点击页面任何地方，尝试播放
+    
+    let isPlaying = false;
+    
+    // 初始化：尝试播放
+    function initAudio() {
+      audio.play().then(() => {
+        isPlaying = true;
+        btn.classList.add('playing');
+      }).catch((err) => {
+        // 自动播放被拦截，保持按钮样式，等用户点击
+        console.log('等待用户交互以播放音乐');
+        isPlaying = false;
+        btn.classList.remove('playing');
+      });
+    }
+
+    // 点击按钮控制播放/暂停
+    btn.addEventListener('click', (e) => {
+      e.stopPropagation(); // 阻止冒泡，防止触发页面点击播放
+      if (isPlaying) {
+        audio.pause();
+        btn.classList.remove('playing');
+        isPlaying = false;
+      } else {
+        audio.play().then(() => {
+          btn.classList.add('playing');
+          isPlaying = true;
+        }).catch(err => console.log('播放失败:', err));
+      }
+    });
+
+    // 如果浏览器拦截了自动播放，当用户在页面上第一次点击时，尝试播放
+    document.addEventListener('click', function firstClick() {
+      if (!isPlaying) {
+        audio.play().then(() => {
+          btn.classList.add('playing');
+          isPlaying = true;
+        }).catch(() => {});
+      }
+      // 移除监听，只触发一次
+      document.removeEventListener('click', firstClick);
+    });
+
+    // 页面加载时尝试
+    window.addEventListener('DOMContentLoaded', initAudio);
+  </script>
 </body>
 </html>
