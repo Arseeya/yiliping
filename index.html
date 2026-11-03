@@ -7,7 +7,6 @@
   <style>
     /* ---------- 全局基底 ---------- */
     * { margin: 0; padding: 0; box-sizing: border-box; }
-    
     ::selection { background: #c44d3a; color: #fffcf8; }
 
     body {
@@ -42,15 +41,14 @@
       box-shadow: 0 10px 30px -15px rgba(0, 0, 0, 0.5);
     }
 
-    /* 界面切换逻辑 */
-    .view { display: none; animation: fadeIn 0.5s ease; }
+    /* 界面切换 */
+    .view { display: none; animation: fadeIn 0.4s ease; }
     .view.active { display: block; }
     @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
-    /* 彩蛋7：全屏盲打水印 */
+    /* 盲打水印 */
     .watermark {
-      position: fixed;
-      top: 50%; left: 50%;
+      position: fixed; top: 50%; left: 50%;
       transform: translate(-50%, -50%) scale(0.5);
       font-size: 30vw; font-weight: 900;
       color: rgba(196, 77, 58, 0.08);
@@ -60,7 +58,7 @@
     }
     .watermark.show { opacity: 1; transform: translate(-50%, -50%) scale(1); }
 
-    /* ---------- 音乐开关 ---------- */
+    /* 音乐开关 */
     .music-toggle {
       position: absolute; top: 1.5rem; right: 1.5rem;
       width: 36px; height: 36px; background: #fffcf8;
@@ -77,7 +75,7 @@
     body.secret-mode .music-toggle { background: #24201d; border-color: #3a342e; }
     body.secret-mode .music-toggle.playing { background: #c44d3a; border-color: #c44d3a; }
 
-    /* ---------- 明面排版 ---------- */
+    /* 排版 */
     .module { margin-bottom: 3.2rem; position: relative; }
     .module-label { display: flex; align-items: center; gap: 0.8rem; margin-bottom: 1.3rem; }
     .module-label .seal-no {
@@ -110,6 +108,7 @@
     }
     body.secret-mode .tag-item { background: #1a1817; border-color: #3a342e; color: #a89e94; }
 
+    /* 唯一保留的标签彩蛋 */
     .tag-item.rebel-tag:hover { border-style: dashed; border-color: #c44d3a; color: #c44d3a; }
     .hidden-text {
       display: inline-block; max-width: 0; overflow: hidden;
@@ -145,33 +144,28 @@
     body.secret-mode .footer-note { border-color: #3a342e; }
     .red-dot { color: #c44d3a; margin: 0 0.3rem; }
 
-    /* ---------- 暗面专属排版 ---------- */
-    .dark-title { font-size: 1.6rem; font-weight: 600; color: #f2ede6; margin-bottom: 2rem; text-align: center; letter-spacing: 0.1em;}
-    .dark-text { 
-      font-size: 1rem; line-height: 2.2; margin-bottom: 1.5rem; color: #c4b8ae; 
-      text-indent: 2em; text-align: justify;
-    }
-    /* 对话流样式 */
-    .dialog { font-style: italic; color: #e8dfd8; }
+    /* 暗面专属 */
+    .dark-title { font-size: 1.6rem; font-weight: 600; color: #f2ede6; margin-bottom: 2rem; text-align: center; letter-spacing: 0.1em; }
+    .dark-text { font-size: 1rem; line-height: 2.2; margin-bottom: 1.5rem; color: #c4b8ae; text-indent: 2em; text-align: justify; }
     .back-link { display: block; text-align: center; margin-top: 3rem; font-size: 0.8rem; color: #c44d3a; cursor: pointer; text-decoration: none; letter-spacing: 0.1em; }
 
-    /* 彩蛋9：主页句号的隐藏门 */
-    .secret-dot { cursor: pointer; transition: color 0.3s; }
-    .secret-dot:hover { color: #c44d3a; font-weight: bold; }
-
-    /* 彩蛋8：暗面点击掉落小爱心 */
-    .heart-drop {
-      position: fixed;
-      pointer-events: none;
-      font-size: 1.5rem;
-      transform: translate(-50%, -50%) scale(1);
-      animation: floatUp 1.5s ease-out forwards;
-      z-index: 9999;
-      user-select: none;
+    /* 改良版句号暗门：扩大点击区域，加入微光反馈 */
+    .secret-dot { 
+      cursor: pointer; 
+      transition: all 0.3s;
+      position: relative;
+      display: inline-block;
+      padding: 0 4px; /* 加大左右可点击区域 */
+      margin: 0 -4px;
+      font-weight: bold;
     }
-    @keyframes floatUp {
-      0% { transform: translate(-50%, -50%) scale(0.5) rotate(0deg); opacity: 1; }
-      100% { transform: translate(-50%, -150px) scale(1.5) rotate(45deg); opacity: 0; }
+    /* 点上去的瞬间变红 */
+    .secret-dot:active { color: #c44d3a; }
+    
+    /* 悬浮时出现一圈微光，暗示可以点 */
+    .secret-dot:hover { 
+      color: #c44d3a; 
+      text-shadow: 0 0 8px rgba(196, 77, 58, 0.6); 
     }
 
     /* 响应式 */
@@ -194,14 +188,12 @@
   <div class="watermark" id="watermark">易</div>
 
   <main class="paper">
-
     <audio id="bgMusic" src="music/千年-刘宇.mp3" loop preload="auto" playsinline></audio>
-    
     <div class="music-toggle" id="musicBtn" title="点击播放/暂停背景音乐">
       <span class="icon">声</span>
     </div>
 
-    <!-- ================= 界面 1：明面（主页） ================= -->
+    <!-- 明面 -->
     <div class="view active" id="view-main">
       <section class="module">
         <div class="module-label"><span class="seal-no">一</span><span class="line"></span></div>
@@ -238,7 +230,7 @@
         <div class="intro-lines">
           <p>来自江西的高三学生，十七岁，水瓶座。</p>
           <p>朋友不少，也还想认识更多——路过这里的话，欢迎打个招呼。</p>
-          <!-- 彩蛋9：句号里的隐藏门 -->
+          <!-- 扩大了点击区域的句号 -->
           <p class="sub-note">嗯，就这样吧<span class="secret-dot" id="secretDoor">。</span></p>
         </div>
       </section>
@@ -266,21 +258,19 @@
       </div>
     </div>
 
-
-    <!-- ================= 界面 2：暗面（隐藏页） ================= -->
+    <!-- 暗面 -->
     <div class="view" id="view-secret">
       <h2 class="dark-title">我说我喜欢你你信吗</h2>
-      
       <p class="dark-text">
         不开玩笑了。既然你能点进这里，说明你挺无聊的，或者你对我有一点好奇。
       </p>
-      <p class="dark-text dialog">
+      <p class="dark-text" style="font-style: italic; color: #e8dfd8;">
         “看不出来啊，主页上写得那么高冷，背地里是个话痨吗？”
       </p>
       <p class="dark-text">
         如你所见。主页是给所有人看的体面，这里是不想装的自己。我不喜欢按套路出牌，更讨厌那些虚头巴脑的客套。我平时看起来可能不太好惹，但其实，只要你不教我做事，我们可以聊得很开心。
       </p>
-      <p class="dark-text dialog">
+      <p class="dark-text" style="font-style: italic; color: #e8dfd8;">
         “所以，那句‘我喜欢你’呢？”
       </p>
       <p class="dark-text">
@@ -293,7 +283,7 @@
   </main>
 
   <script>
-    /* ---------- 音乐逻辑 ---------- */
+    /* 音乐逻辑 */
     const audio = document.getElementById('bgMusic');
     const btn = document.getElementById('musicBtn');
     let isPlaying = false; 
@@ -330,7 +320,7 @@
       }
     });
 
-    /* ---------- 多界面路由逻辑 ---------- */
+    /* 界面路由 */
     const viewMain = document.getElementById('view-main');
     const viewSecret = document.getElementById('view-secret');
     const body = document.body;
@@ -360,8 +350,7 @@
       window.location.hash = '';
     });
 
-
-    /* ---------- 彩蛋 7：全站盲打 "yiliping" ---------- */
+    /* 盲打水印 */
     const watermark = document.getElementById('watermark');
     let typeBuffer = '';
     const secretWord = 'yiliping';
@@ -376,33 +365,6 @@
         watermark.classList.add('show');
         typeBuffer = '';
         setTimeout(() => { watermark.classList.remove('show'); }, 2500);
-      }
-    });
-
-
-    /* ---------- 彩蛋 8：暗面点击掉小爱心 ---------- */
-    document.addEventListener('click', function(e) {
-      // 处于暗面，且没点到链接和音乐按钮
-      if (body.classList.contains('secret-mode') && !e.target.closest('a') && !e.target.closest('#musicBtn')) {
-        const heart = document.createElement('div');
-        heart.className = 'heart-drop';
-        // 使用朱砂红/粉色系随机
-        const colors = ['#c44d3a', '#e88c7d', '#d96b59'];
-        heart.style.color = colors[Math.floor(Math.random() * colors.length)];
-        heart.innerText = '♥';
-        
-        heart.style.left = e.clientX + 'px';
-        heart.style.top = e.clientY + 'px';
-        
-        // 随机偏移和旋转
-        const randomX = (Math.random() - 0.5) * 100;
-        heart.style.marginLeft = randomX + 'px';
-        
-        document.body.appendChild(heart);
-        
-        setTimeout(() => {
-          heart.remove();
-        }, 1500);
       }
     });
   </script>
