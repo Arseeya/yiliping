@@ -7,6 +7,8 @@
   <style>
     /* ---------- 全局基底 ---------- */
     * { margin: 0; padding: 0; box-sizing: border-box; }
+    
+    /* 彩蛋1：选中文字变朱砂色 */
     ::selection { background: #c44d3a; color: #fffcf8; }
 
     body {
@@ -19,10 +21,7 @@
       justify-content: center;
       min-height: 100vh;
       overflow-x: hidden;
-      transition: background 0.5s ease;
     }
-
-    body.secret-mode { background: #1a1817; color: #a89e94; }
 
     .paper {
       max-width: 780px;
@@ -32,83 +31,101 @@
       box-shadow: 0 10px 30px -15px rgba(80, 60, 40, 0.1);
       padding: 3rem 2.8rem;
       position: relative;
-      transition: all 0.5s ease;
     }
 
-    body.secret-mode .paper {
-      background: #24201d;
-      border-color: #3a342e;
-      box-shadow: 0 10px 30px -15px rgba(0, 0, 0, 0.5);
-    }
-
-    /* 界面切换 */
-    .view { display: none; animation: fadeIn 0.4s ease; }
-    .view.active { display: block; }
-    @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-
-    /* 盲打水印 */
+    /* ---------- 盲打彩蛋水印 ---------- */
     .watermark {
       position: fixed; top: 50%; left: 50%;
       transform: translate(-50%, -50%) scale(0.5);
       font-size: 30vw; font-weight: 900;
-      color: rgba(196, 77, 58, 0.08);
+      color: rgba(196, 77, 58, 0.05);
       pointer-events: none; opacity: 0;
       transition: all 1s cubic-bezier(0.19, 1, 0.22, 1);
       z-index: 999;
+      user-select: none;
     }
     .watermark.show { opacity: 1; transform: translate(-50%, -50%) scale(1); }
 
-    /* 音乐开关 */
+    /* ---------- 背景音乐开关 ---------- */
     .music-toggle {
       position: absolute; top: 1.5rem; right: 1.5rem;
       width: 36px; height: 36px; background: #fffcf8;
       border: 1px solid #e5ded5; border-radius: 2px;
       display: flex; align-items: center; justify-content: center;
-      cursor: pointer; font-size: 1rem; color: #8a7e72;
+      cursor: pointer; font-family: "Noto Serif SC", "Songti SC", serif;
+      font-size: 1rem; color: #8a7e72;
       transition: all 0.3s ease; z-index: 10;
+      -webkit-tap-highlight-color: transparent;
     }
+
     .music-toggle:hover { color: #c44d3a; border-color: #c44d3a; }
-    .music-toggle.playing { background: #c44d3a; color: #fffcf8; border-color: #c44d3a; }
+    .music-toggle.playing {
+      background: #c44d3a; color: #fffcf8; border-color: #c44d3a;
+      box-shadow: 0 2px 5px rgba(150, 50, 30, 0.2);
+    }
     .music-toggle.playing .icon { animation: spin 4s linear infinite; }
     @keyframes spin { 100% { transform: rotate(360deg); } }
-    
-    body.secret-mode .music-toggle { background: #24201d; border-color: #3a342e; }
-    body.secret-mode .music-toggle.playing { background: #c44d3a; border-color: #c44d3a; }
 
-    /* 排版 */
+    /* ---------- 模块与排版 ---------- */
     .module { margin-bottom: 3.2rem; position: relative; }
+    
     .module-label { display: flex; align-items: center; gap: 0.8rem; margin-bottom: 1.3rem; }
     .module-label .seal-no {
       display: inline-flex; align-items: center; justify-content: center;
       width: 24px; height: 24px; background: #c44d3a; color: #fff8f0;
-      font-size: 0.65rem; font-weight: 600; border-radius: 2px;
+      font-size: 0.65rem; font-weight: 600; border-radius: 2px; letter-spacing: 1px;
+      user-select: none;
     }
-    .module-label .line { flex: 1; height: 1px; background: linear-gradient(90deg, #e0d7cf 0%, #f0eae4 60%, transparent 100%); }
-    body.secret-mode .module-label .line { background: linear-gradient(90deg, #3a342e 0%, #24201d 60%, transparent 100%); }
+    .module-label .line {
+      flex: 1; height: 1px; background: linear-gradient(90deg, #e0d7cf 0%, #f0eae4 60%, transparent 100%);
+    }
 
-    .title-block { display: flex; flex-direction: column; align-items: center; text-align: center; padding: 0.5rem 0 1.5rem; position: relative; }
-    .name { font-size: 2.6rem; font-weight: 600; letter-spacing: 0.1em; color: #1f1b18; margin-bottom: 0.4rem; line-height: 1.3; }
-    body.secret-mode .name { color: #f2ede6; }
+    /* 模块一 */
+    .title-block {
+      display: flex; flex-direction: column; align-items: center; text-align: center;
+      padding: 0.5rem 0 1.5rem; position: relative;
+    }
+    
+    .name {
+      font-size: 2.6rem; font-weight: 600; letter-spacing: 0.1em;
+      color: #1f1b18; margin-bottom: 0.4rem; line-height: 1.3;
+      cursor: default;
+    }
     .name .surname { color: #c44d3a; }
 
-    .motto { font-size: 1rem; color: #8a7e72; margin-top: 0.5rem; letter-spacing: 0.15em; border-top: 1px solid #eee8e2; border-bottom: 1px solid #eee8e2; padding: 0.5rem 1.8rem; display: inline-block; }
-    body.secret-mode .motto { border-color: #3a342e; }
+    /* 彩蛋2：双击名字出现的批注 */
+    .name-comment {
+      font-size: 0.75rem; color: #b5a99e;
+      opacity: 0; transition: opacity 0.5s ease;
+      position: absolute; top: 3.5rem; font-style: italic;
+      pointer-events: none;
+    }
+    .name-comment.show { opacity: 1; }
+
+    .motto {
+      font-size: 1rem; color: #8a7e72; margin-top: 0.5rem; letter-spacing: 0.15em;
+      border-top: 1px solid #eee8e2; border-bottom: 1px solid #eee8e2;
+      padding: 0.5rem 1.8rem; display: inline-block;
+    }
     .motto::before, .motto::after { content: "·"; color: #c44d3a; margin: 0 0.5rem; font-size: 1.4rem; vertical-align: middle; }
 
     .verse-note {
-      position: absolute; right: -1rem; top: 0; writing-mode: vertical-rl;
+      position: absolute; right: -1rem; top: 0;
+      writing-mode: vertical-rl; text-orientation: upright;
       font-size: 0.75rem; color: #b5a99e; letter-spacing: 0.15em; line-height: 1.8;
+      user-select: none;
     }
 
+    /* 模块二 */
     .tag-cloud { display: flex; flex-wrap: wrap; gap: 0.7rem 1rem; padding: 0.4rem 0; justify-content: center; }
     .tag-item {
       font-size: 0.82rem; color: #5f554b; border: 1px solid #e2d9d0;
       padding: 0.25rem 0.9rem; border-radius: 2px; background: #fdfaf6;
-      white-space: nowrap; transition: all 0.2s ease; cursor: default;
+      letter-spacing: 0.03em; white-space: nowrap; transition: all 0.2s ease;
+      cursor: default;
     }
-    body.secret-mode .tag-item { background: #1a1817; border-color: #3a342e; color: #a89e94; }
-
-    /* 唯一保留的标签彩蛋 */
+    
+    /* 彩蛋3：悬停特定标签 */
     .tag-item.rebel-tag:hover { border-style: dashed; border-color: #c44d3a; color: #c44d3a; }
     .hidden-text {
       display: inline-block; max-width: 0; overflow: hidden;
@@ -117,69 +134,72 @@
     }
     .tag-item.rebel-tag:hover .hidden-text { max-width: 10em; opacity: 1; }
 
+    /* 模块三 */
     .quote-block {
       border-left: 3px solid #c44d3a; padding: 0.8rem 1.4rem;
       background: #fbf7f3; margin-bottom: 1.4rem;
-      font-size: 1.05rem; font-style: italic;
+      font-size: 1.05rem; color: #3f3833; line-height: 1.8; font-style: italic;
     }
-    body.secret-mode .quote-block { background: #2d2825; }
-    .intro-lines { display: flex; flex-direction: column; gap: 0.6rem; font-size: 0.95rem; }
-    .intro-lines .sub-note { font-size: 0.82rem; color: #a89e94; }
+    .intro-lines { display: flex; flex-direction: column; gap: 0.6rem; font-size: 0.95rem; color: #4f4842; padding-left: 0.2rem; }
+    .intro-lines .sub-note { font-size: 0.82rem; color: #a89e94; margin-top: 0.2rem; }
 
+    /* 模块四 */
     .connect-block { text-align: center; }
-    .connect-block .invite { font-size: 0.95rem; margin-bottom: 1rem; }
-    .social-row a { color: #6b6158; text-decoration: none; font-size: 0.9rem; border-bottom: 1px dotted #d9cec4; padding-bottom: 0.15rem; }
-    body.secret-mode .social-row a { color: #a89e94; border-color: #3a342e; }
+    .connect-block .invite { font-size: 0.95rem; color: #5f554b; margin-bottom: 1rem; letter-spacing: 0.05em; }
+    .connect-block .invite em { font-style: normal; color: #c44d3a; font-weight: 500; }
+    .social-row a {
+      color: #6b6158; text-decoration: none; font-size: 0.9rem; letter-spacing: 0.05em;
+      border-bottom: 1px dotted #d9cec4; padding-bottom: 0.15rem; transition: all 0.2s ease;
+    }
+    .social-row a:hover { color: #c44d3a; border-bottom-color: #c44d3a; }
 
-    .signature { display: flex; justify-content: flex-end; align-items: flex-end; gap: 1.2rem; margin-top: 1.5rem; padding-right: 0.5rem; }
-    .sign-text { text-align: right; font-size: 0.78rem; color: #8a7e72; letter-spacing: 0.12em; line-height: 1.9; }
+    /* 落款 */
+    .signature {
+      display: flex; justify-content: flex-end; align-items: flex-end;
+      gap: 1.2rem; margin-top: 1.5rem; padding-right: 0.5rem;
+    }
+    .signature .sign-text {
+      text-align: right; font-size: 0.78rem; color: #8a7e72; letter-spacing: 0.12em; line-height: 1.9;
+    }
+    .signature .sign-text .sign-name { font-size: 0.88rem; color: #5f554b; }
+    
+    /* 印章 */
     .red-seal {
       width: 52px; height: 52px; background: #c44d3a; border-radius: 2px;
       display: flex; align-items: center; justify-content: center;
       color: #fff8f0; font-size: 1.3rem; font-weight: 600;
-      writing-mode: vertical-rl;
+      letter-spacing: 0.05em; line-height: 1;
+      box-shadow: 0 2px 5px rgba(150, 50, 30, 0.2);
+      flex-shrink: 0; user-select: none;
+      writing-mode: vertical-rl; text-orientation: upright;
     }
 
-    .footer-note { text-align: center; font-size: 0.7rem; color: #b8ada2; border-top: 1px solid #f0eae4; padding-top: 1.2rem; margin-top: 1.5rem; }
-    body.secret-mode .footer-note { border-color: #3a342e; }
-    .red-dot { color: #c44d3a; margin: 0 0.3rem; }
-
-    /* 暗面专属 */
-    .dark-title { font-size: 1.6rem; font-weight: 600; color: #f2ede6; margin-bottom: 2rem; text-align: center; letter-spacing: 0.1em; }
-    .dark-text { font-size: 1rem; line-height: 2.2; margin-bottom: 1.5rem; color: #c4b8ae; text-indent: 2em; text-align: justify; }
-    .back-link { display: block; text-align: center; margin-top: 3rem; font-size: 0.8rem; color: #c44d3a; cursor: pointer; text-decoration: none; letter-spacing: 0.1em; }
-
-    /* 改良版句号暗门：扩大点击区域，加入微光反馈 */
-    .secret-dot { 
-      cursor: pointer; 
-      transition: all 0.3s;
-      position: relative;
-      display: inline-block;
-      padding: 0 4px; /* 加大左右可点击区域 */
-      margin: 0 -4px;
-      font-weight: bold;
+    /* 页脚 */
+    .footer-note {
+      text-align: center; font-size: 0.7rem; color: #b8ada2;
+      letter-spacing: 0.1em; border-top: 1px solid #f0eae4;
+      padding-top: 1.2rem; margin-top: 1.5rem;
+      cursor: default; user-select: none;
     }
-    /* 点上去的瞬间变红 */
-    .secret-dot:active { color: #c44d3a; }
-    
-    /* 悬浮时出现一圈微光，暗示可以点 */
-    .secret-dot:hover { 
-      color: #c44d3a; 
-      text-shadow: 0 0 8px rgba(196, 77, 58, 0.6); 
-    }
+    .footer-note .red-dot { color: #c44d3a; margin: 0 0.3rem; }
 
     /* 响应式 */
     @media (max-width: 700px) {
-      .verse-note { position: static; writing-mode: horizontal-tb; text-align: right; margin-top: 1.5rem; font-size: 0.7rem; color: #b5a99e; border-left: 1px solid #eee8e2; padding-left: 0.8rem; }
+      .verse-note {
+        position: static; writing-mode: horizontal-tb; text-align: right;
+        margin-top: 1.5rem; font-size: 0.7rem; color: #b5a99e;
+        border-left: 1px solid #eee8e2; padding-left: 0.8rem;
+      }
     }
     @media (max-width: 600px) {
       body { padding: 1.5rem 0.8rem; }
       .paper { padding: 2rem 1.4rem; }
       .name { font-size: 2rem; }
-      .tag-item { font-size: 0.75rem; }
+      .tag-item { font-size: 0.75rem; padding: 0.2rem 0.6rem; }
+      .quote-block { font-size: 0.95rem; padding: 0.7rem 1rem; }
       .signature { gap: 0.8rem; padding-right: 0; }
       .red-seal { width: 46px; height: 46px; font-size: 1.15rem; }
-      .music-toggle { top: 1rem; right: 1rem; width: 32px; height: 32px; }
+      .music-toggle { top: 1rem; right: 1rem; width: 32px; height: 32px; font-size: 0.9rem; }
     }
   </style>
 </head>
@@ -188,102 +208,85 @@
   <div class="watermark" id="watermark">易</div>
 
   <main class="paper">
+
     <audio id="bgMusic" src="music/千年-刘宇.mp3" loop preload="auto" playsinline></audio>
+    
     <div class="music-toggle" id="musicBtn" title="点击播放/暂停背景音乐">
       <span class="icon">声</span>
     </div>
 
-    <!-- 明面 -->
-    <div class="view active" id="view-main">
-      <section class="module">
-        <div class="module-label"><span class="seal-no">一</span><span class="line"></span></div>
-        <div class="title-block">
-          <h1 class="name"><span class="surname">易</span>丽萍</h1>
-          <div class="motto">不入流，也是流。</div>
-          <div class="verse-note">
-            林花谢了春红，太匆匆。<br>无奈朝来寒雨晚来风。<br><br>胭脂泪，相留醉，几时重。<br>自是人生长恨水长东。
-          </div>
+    <!-- ========== 模块一 ========== -->
+    <section class="module">
+      <div class="module-label"><span class="seal-no">一</span><span class="line"></span></div>
+      <div class="title-block">
+        <h1 class="name" id="triggerName"><span class="surname">易</span>丽萍</h1>
+        <div class="name-comment" id="nameComment">别点了，我不接受任何评价。</div>
+        <div class="motto">不入流，也是流。</div>
+        <div class="verse-note">
+          林花谢了春红，太匆匆。<br>无奈朝来寒雨晚来风。<br><br>胭脂泪，相留醉，几时重。<br>自是人生长恨水长东。
         </div>
-      </section>
-
-      <section class="module">
-        <div class="module-label"><span class="seal-no">二</span><span class="line"></span></div>
-        <div class="tag-cloud">
-          <span class="tag-item">江西</span>
-          <span class="tag-item">高三</span>
-          <span class="tag-item">十七岁</span>
-          <span class="tag-item">水瓶座</span>
-          <span class="tag-item">2月1日</span>
-          <span class="tag-item">INFP</span>
-          <span class="tag-item rebel-tag">
-            喜欢独立思考，不喜欢随大流<span class="hidden-text">，更不喜欢教我做事</span>
-          </span>
-          <span class="tag-item">中文 · 江西方言 · 一点点英语</span>
-        </div>
-      </section>
-
-      <section class="module">
-        <div class="module-label"><span class="seal-no">三</span><span class="line"></span></div>
-        <div class="quote-block">
-          我很难评价自己，所以评论权就交给所有认识我、和看到这个网站的人。
-        </div>
-        <div class="intro-lines">
-          <p>来自江西的高三学生，十七岁，水瓶座。</p>
-          <p>朋友不少，也还想认识更多——路过这里的话，欢迎打个招呼。</p>
-          <!-- 扩大了点击区域的句号 -->
-          <p class="sub-note">嗯，就这样吧<span class="secret-dot" id="secretDoor">。</span></p>
-        </div>
-      </section>
-
-      <section class="module">
-        <div class="module-label"><span class="seal-no">四</span><span class="line"></span></div>
-        <div class="connect-block">
-          <p class="invite">如果你也想认识我，<em>写信给我</em>。</p>
-          <div class="social-row">
-            <a href="mailto:arseeya@outlook.com">arseeya@outlook.com</a>
-          </div>
-        </div>
-      </section>
-
-      <div class="signature">
-        <div class="sign-text">
-          <div class="sign-name">易丽萍 谨识</div>
-          <div>丙午年 · 季秋</div>
-        </div>
-        <div class="red-seal">荼絳</div>
       </div>
+    </section>
 
-      <div class="footer-note">
-        易丽萍<span class="red-dot">·</span>yiliping.kdns.fr
+    <!-- ========== 模块二 ========== -->
+    <section class="module">
+      <div class="module-label"><span class="seal-no">二</span><span class="line"></span></div>
+      <div class="tag-cloud">
+        <span class="tag-item">江西</span>
+        <span class="tag-item">高三</span>
+        <span class="tag-item">十七岁</span>
+        <span class="tag-item">水瓶座</span>
+        <span class="tag-item">2月1日</span>
+        <span class="tag-item">INFP</span>
+        <span class="tag-item rebel-tag">
+          喜欢独立思考，不喜欢随大流<span class="hidden-text">，更不喜欢教我做事</span>
+        </span>
+        <span class="tag-item">中文 · 江西方言 · 一点点英语</span>
       </div>
+    </section>
+
+    <!-- ========== 模块三 ========== -->
+    <section class="module">
+      <div class="module-label"><span class="seal-no">三</span><span class="line"></span></div>
+      <div class="quote-block">
+        我很难评价自己，所以评论权就交给所有认识我、和看到这个网站的人。
+      </div>
+      <div class="intro-lines">
+        <p>来自江西的高三学生，十七岁，水瓶座。</p>
+        <p>朋友不少，也还想认识更多——路过这里的话，欢迎打个招呼。</p>
+        <p class="sub-note">嗯，就这样吧。</p>
+      </div>
+    </section>
+
+    <!-- ========== 模块四 ========== -->
+    <section class="module">
+      <div class="module-label"><span class="seal-no">四</span><span class="line"></span></div>
+      <div class="connect-block">
+        <p class="invite">如果你也想认识我，<em>写信给我</em>。</p>
+        <div class="social-row">
+          <a href="mailto:arseeya@outlook.com">arseeya@outlook.com</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========== 落款 ========== -->
+    <div class="signature">
+      <div class="sign-text">
+        <div class="sign-name">易丽萍 谨识</div>
+        <div>丙午年 · 季秋</div>
+      </div>
+      <div class="red-seal" aria-label="荼絳">荼絳</div>
     </div>
 
-    <!-- 暗面 -->
-    <div class="view" id="view-secret">
-      <h2 class="dark-title">我说我喜欢你你信吗</h2>
-      <p class="dark-text">
-        不开玩笑了。既然你能点进这里，说明你挺无聊的，或者你对我有一点好奇。
-      </p>
-      <p class="dark-text" style="font-style: italic; color: #e8dfd8;">
-        “看不出来啊，主页上写得那么高冷，背地里是个话痨吗？”
-      </p>
-      <p class="dark-text">
-        如你所见。主页是给所有人看的体面，这里是不想装的自己。我不喜欢按套路出牌，更讨厌那些虚头巴脑的客套。我平时看起来可能不太好惹，但其实，只要你不教我做事，我们可以聊得很开心。
-      </p>
-      <p class="dark-text" style="font-style: italic; color: #e8dfd8;">
-        “所以，那句‘我喜欢你’呢？”
-      </p>
-      <p class="dark-text">
-        那是暗号。如果你也是那种“在人群里觉得无聊，非要找点茬”的人，那这句喜欢，就是给你的。
-      </p>
-      
-      <a class="back-link" id="backDoor">← 退回去，装作没看见</a>
+    <!-- ========== 页脚 ========== -->
+    <div class="footer-note">
+      易丽萍<span class="red-dot">·</span>yiliping.kdns.fr
     </div>
 
   </main>
 
   <script>
-    /* 音乐逻辑 */
+    /* ---------- 音乐逻辑 ---------- */
     const audio = document.getElementById('bgMusic');
     const btn = document.getElementById('musicBtn');
     let isPlaying = false; 
@@ -320,37 +323,18 @@
       }
     });
 
-    /* 界面路由 */
-    const viewMain = document.getElementById('view-main');
-    const viewSecret = document.getElementById('view-secret');
-    const body = document.body;
-
-    function checkRoute() {
-      if (window.location.hash === '#secret') {
-        viewMain.classList.remove('active');
-        viewSecret.classList.add('active');
-        body.classList.add('secret-mode');
-        document.title = '易丽萍 · 不可言说';
-      } else {
-        viewSecret.classList.remove('active');
-        viewMain.classList.add('active');
-        body.classList.remove('secret-mode');
-        document.title = '易丽萍 · 简牍';
-      }
-    }
-
-    window.addEventListener('hashchange', checkRoute);
-    checkRoute();
-
-    document.getElementById('secretDoor').addEventListener('click', () => {
-      window.location.hash = 'secret';
+    /* ---------- 彩蛋 2：双击名字 ---------- */
+    const triggerName = document.getElementById('triggerName');
+    const nameComment = document.getElementById('nameComment');
+    
+    triggerName.addEventListener('dblclick', () => {
+      nameComment.classList.add('show');
+      setTimeout(() => {
+        nameComment.classList.remove('show');
+      }, 3000); 
     });
 
-    document.getElementById('backDoor').addEventListener('click', () => {
-      window.location.hash = '';
-    });
-
-    /* 盲打水印 */
+    /* ---------- 彩蛋 4：盲打 "yiliping" ---------- */
     const watermark = document.getElementById('watermark');
     let typeBuffer = '';
     const secretWord = 'yiliping';
@@ -363,8 +347,10 @@
       }
       if (typeBuffer === secretWord) {
         watermark.classList.add('show');
-        typeBuffer = '';
-        setTimeout(() => { watermark.classList.remove('show'); }, 2500);
+        typeBuffer = ''; 
+        setTimeout(() => {
+          watermark.classList.remove('show');
+        }, 2500);
       }
     });
   </script>
